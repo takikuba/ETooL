@@ -2,6 +2,7 @@ package main.java;
 
 import main.java.scenes.MenuScene;
 import main.java.scenes.SceneManager;
+import main.java.scenes.WorkspaceScene;
 
 import javax.swing.*;
 
@@ -15,8 +16,8 @@ public class AppRunner extends JFrame {
         SceneManager.setScene(this);
 
         setTitle("ETooL");
-
-//        setLocationRelativeTo(null);
+        getContentPane().add(new MenuScene());
+        getContentPane().add(new WorkspaceScene());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         setLayout(null);

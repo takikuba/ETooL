@@ -14,4 +14,22 @@ public class SceneManager {
         return currentScene;
     }
 
+    public static void addComponent(JComponent component) {
+        currentScene.getContentPane().add(component);
+        currentScene.revalidate();
+        currentScene.repaint();
+    }
+
+    public static void setComponent(JComponent component) {
+        currentScene.getContentPane().removeAll();
+        addComponent(component);
+    }
+
+    @Override
+    public String toString() {
+        return "game.SceneManager{" +
+                "jFrame=" + currentScene +
+                '}';
+    }
+
 }
