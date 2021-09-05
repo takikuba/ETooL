@@ -1,32 +1,25 @@
 package main.java.etl;
 
-import main.java.scenes.SceneManager;
-import main.java.scenes.WorkspaceScene;
-
-import javax.swing.*;
-import java.awt.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class EtlActions extends JPanel {
+public class EtlActions {
     private final Logger logger = Logger.getLogger("EtlActions");
 
     public void connectToDb(){
         logger.log(Level.INFO, "connectToDb");
-        setBackground(Color.BLUE);
-        SceneManager.repaint();
     }
 
     public void extract() {
-
+        logger.log(Level.INFO, "extract");
     }
 
     public void transform() {
-
+        logger.log(Level.INFO, "transform");
     }
 
     public void load() {
-
+        logger.log(Level.INFO, "load");
     }
 
 }

@@ -15,4 +15,18 @@ public class WorkspaceScene extends JPanel {
 
     }
 
+    public void connectToDb() {
+
+    }
+
+    public void extract() {
+
+    }
+
+    public void transform() {
+    }
+
+    public void load() {
+
+    }
 }

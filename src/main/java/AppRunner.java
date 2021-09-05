@@ -21,14 +21,18 @@ public class AppRunner extends JFrame {
         SceneManager.setScene(this);
 
         setTitle("ETooL");
-        getContentPane().add(new MenuScene());
-        getContentPane().add(new WorkspaceScene());
+
+        MenuScene menuScene = new MenuScene();
+        WorkspaceScene workspaceScene = new WorkspaceScene();
+        SceneManager.setMenuAndWorkspace(menuScene, workspaceScene);
+
+        getContentPane().add(menuScene);
+        getContentPane().add(workspaceScene);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         setLayout(null);
         setSize(800, 600);
         setVisible(true);
-        getContentPane().add(new MenuScene());
     }
 
     private void clearLogs(){
@@ -37,16 +41,17 @@ public class AppRunner extends JFrame {
             File[] logFiles = logFolder.listFiles();
             long oldestDate = Long.MAX_VALUE;
             File oldestFile = null;
-            for(File f: logFiles){
-                    if(f.lastModified() < oldestDate){
-                        oldestDate = f.lastModified();
-                        oldestFile = f;
+            if (logFiles != null) {
+                for(File f: logFiles){
+                        if(f.lastModified() < oldestDate){
+                            oldestDate = f.lastModified();
+                            oldestFile = f;
+                        }
                     }
-                }
-
                 if(oldestFile != null){
                     oldestFile.delete();
                 }
+            }
 
         }
     }

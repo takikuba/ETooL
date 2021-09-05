@@ -1,7 +1,6 @@
 package main.java.scenes;
 
 import main.java.Constants;
-import main.java.etl.EtlActions;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,8 +9,8 @@ import java.util.logging.Logger;
 
 public class MenuScene extends JPanel {
     private final Image logo = new ImageIcon(Constants.LOGO_PATH).getImage();
-    private final EtlActions etlActions = new EtlActions();
-    private final Logger logger = Logger.getLogger("MenuScene");
+    private final Logger logger = Constants.logger();
+    private final WorkspaceScene workspaceScene = new WorkspaceScene();
 
     public MenuScene() {
         setBounds(0, 0, 200, 600);
@@ -28,10 +27,10 @@ public class MenuScene extends JPanel {
                 50, 200, 100, 400);
         menuButtons.setLayout(new BoxLayout(menuButtons, BoxLayout.Y_AXIS));
 
-        addButton("ConnectToDb", menuButtons, action -> etlActions.connectToDb());
-        addButton("Extract", menuButtons, action -> etlActions.extract());
-        addButton("Transform", menuButtons, action -> etlActions.transform());
-        addButton("Load", menuButtons, action -> etlActions.load());
+        addButton("ConnectToDb", menuButtons, action -> workspaceScene.connectToDb());
+        addButton("Extract", menuButtons, action -> workspaceScene.extract());
+        addButton("Transform", menuButtons, action -> workspaceScene.transform());
+        addButton("Load", menuButtons, action -> workspaceScene.load());
         addButton("Settings", menuButtons, action -> settings());
         addButton("Help", menuButtons, action -> help());
 
@@ -51,11 +50,12 @@ public class MenuScene extends JPanel {
     }
 
     private void settings() {
-
+        new Settings();
     }
 
     private void help() {
-
+        JOptionPane.showMessageDialog(this, "In case of any questions: contact us!" + '\n' +
+                "Application directed by: Jakub Klimek");
     }
 
     @Override
@@ -63,4 +63,5 @@ public class MenuScene extends JPanel {
         super.paintComponent(g);
         g.drawImage(logo, -15, -5, null);
     }
+
 }
