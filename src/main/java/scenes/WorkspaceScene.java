@@ -10,4 +10,9 @@ public class WorkspaceScene extends JPanel {
         setBackground(Color.GRAY);
     }
 
+    public void setComponent(JComponent component) {
+        this.add(component);
+
+    }
+
 }

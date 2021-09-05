@@ -20,6 +20,11 @@ public class SceneManager {
         currentScene.repaint();
     }
 
+    public static void repaint(){
+        currentScene.revalidate();
+        currentScene.repaint();
+    }
+
     public static void setComponent(JComponent component) {
         currentScene.getContentPane().removeAll();
         addComponent(component);
