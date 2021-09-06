@@ -1,5 +1,7 @@
 package main.java.scenes;
 
+import main.java.Constants;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -28,7 +30,7 @@ public class SceneManager {
         currentScene.repaint();
     }
 
-    public static void repaint() {
+    public static void repaintFrame() {
         currentScene.revalidate();
         currentScene.repaint();
     }
@@ -41,7 +43,20 @@ public class SceneManager {
     public static void repaintColor(Color menuColor, Color workspaceColor) {
         menuScene.setBackground(menuColor);
         workspaceScene.setBackground(workspaceColor);
-        repaint();
+        repaintFrame();
+    }
+
+    public static void setMenuColor(Color color) {
+        Constants.setMenuColor(color);
+        menuScene.setMenuColor(color);
+        repaintFrame();
+    }
+
+    public static void setWorkspaceColor(Color color) {
+        Constants.setWorkspaceColor(color);
+        workspaceScene.setBackground(color);
+        menuScene.setWorkspaceColor(color);
+        repaintFrame();
     }
 
     @Override

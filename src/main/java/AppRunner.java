@@ -17,7 +17,6 @@ public class AppRunner extends JFrame {
     }
 
     public AppRunner(){
-        clearLogs();
         SceneManager.setScene(this);
 
         setTitle("ETooL");
@@ -32,28 +31,7 @@ public class AppRunner extends JFrame {
         setResizable(false);
         setLayout(null);
         setSize(800, 600);
+        setLocationRelativeTo(null);
         setVisible(true);
     }
-
-    private void clearLogs(){
-        File logFolder = new File(Constants.LOG_FOLDER);
-        if(logFolder.length() > 5) {
-            File[] logFiles = logFolder.listFiles();
-            long oldestDate = Long.MAX_VALUE;
-            File oldestFile = null;
-            if (logFiles != null) {
-                for(File f: logFiles){
-                        if(f.lastModified() < oldestDate){
-                            oldestDate = f.lastModified();
-                            oldestFile = f;
-                        }
-                    }
-                if(oldestFile != null){
-                    oldestFile.delete();
-                }
-            }
-
-        }
-    }
-
 }

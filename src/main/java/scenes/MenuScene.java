@@ -5,12 +5,14 @@ import main.java.Constants;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MenuScene extends JPanel {
     private final Image logo = new ImageIcon(Constants.LOGO_PATH).getImage();
     private final Logger logger = Constants.logger();
     private final WorkspaceScene workspaceScene = new WorkspaceScene();
+    private JPanel menuButtons;
 
     public MenuScene() {
         setBounds(0, 0, 200, 600);
@@ -20,9 +22,20 @@ public class MenuScene extends JPanel {
         add(addMenuButtons());
     }
 
+    public void setMenuColor(Color color) {
+        setBackground(color);
+        menuButtons.setBackground(color);
+    }
+
+    public void setWorkspaceColor(Color color) {
+        for(Component button: menuButtons.getComponents()){
+            button.setBackground(color);
+        }
+    }
+
     private JPanel addMenuButtons() {
-        JPanel menuButtons = new JPanel();
-        menuButtons.setBackground(Color.lightGray);
+        menuButtons = new JPanel();
+        menuButtons.setBackground(Constants.MENU_COLOR);
         menuButtons.setBounds(
                 50, 200, 100, 400);
         menuButtons.setLayout(new BoxLayout(menuButtons, BoxLayout.Y_AXIS));
@@ -42,7 +55,7 @@ public class MenuScene extends JPanel {
     private void addButton(String string, Container container, ActionListener actionListener){
         JButton jButton = new JButton(string);
         jButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        jButton.setBackground(Color.GRAY);
+        jButton.setBackground(Constants.WORKSPACE_COLOR);
         jButton.addActionListener(actionListener);
 
         container.add(jButton);
@@ -54,7 +67,8 @@ public class MenuScene extends JPanel {
     }
 
     private void help() {
-        JOptionPane.showMessageDialog(this, "In case of any questions: contact us!" + '\n' +
+        logger.log(Level.INFO, "Go to help");
+        JOptionPane.showMessageDialog(null, "In case of any questions: contact us!" + '\n' +
                 "Application directed by: Jakub Klimek");
     }
 
