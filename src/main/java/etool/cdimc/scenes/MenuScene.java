@@ -1,6 +1,6 @@
-package main.java.scenes;
+package etool.cdimc.scenes;
 
-import main.java.Constants;
+import etool.cdimc.Constants;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,11 +1,9 @@
-package main.java.scenes;
+package etool.cdimc.scenes;
 
-import main.java.Constants;
+import etool.cdimc.Constants;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

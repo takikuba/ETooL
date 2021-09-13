@@ -1,11 +1,10 @@
-package main.java;
+package etool.cdimc;
 
-import main.java.scenes.MenuScene;
-import main.java.scenes.SceneManager;
-import main.java.scenes.WorkspaceScene;
+import etool.cdimc.scenes.MenuScene;
+import etool.cdimc.scenes.SceneManager;
+import etool.cdimc.scenes.WorkspaceScene;
 
 import javax.swing.*;
-import java.io.File;
 import java.util.logging.Logger;
 
 public class AppRunner extends JFrame {

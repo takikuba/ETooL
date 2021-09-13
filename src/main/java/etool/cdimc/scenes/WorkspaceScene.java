@@ -1,4 +1,4 @@
-package main.java.scenes;
+package etool.cdimc.scenes;
 
 import javax.swing.*;
 import java.awt.*;
