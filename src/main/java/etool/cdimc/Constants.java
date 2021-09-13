@@ -13,8 +13,8 @@ public class Constants {
 
     public static Color MENU_COLOR = Color.LIGHT_GRAY;
     public static Color WORKSPACE_COLOR = Color.GRAY;
-    private static Font FONT = Font.getFont("Arial");
-    private static Color FONT_COLOR = Color.BLACK;
+    public static Font FONT = new Font("TimesRoman", Font.PLAIN, 10);
+    public static Color FONT_COLOR = Color.BLACK;
 
     public static String LOGO_PATH = "src/main/resources/logo2.png";
     public static String LOG_FOLDER = "src/test/resources/logs";
@@ -33,8 +33,8 @@ public class Constants {
         WORKSPACE_COLOR = color;
     }
 
-    public static void setFont(Font font) {
-        Constants.FONT = font;
+    public static void setFont(String font) {
+        Constants.FONT = new Font(font, Font.PLAIN, 10);
     }
 
     public static void setFontColor(Color fontColor) {
