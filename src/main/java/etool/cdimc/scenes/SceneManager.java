@@ -59,6 +59,19 @@ public class SceneManager {
         repaintFrame();
     }
 
+    public static void changeFont(Component component, Font font){
+        if(component == null) {
+            component = currentScene;
+        }
+        component.setFont(font);
+        component.setForeground(Constants.FONT_COLOR);
+        if ( component instanceof Container ) {
+            for(Component child: ((Container) component).getComponents()) {
+                changeFont(child, font);
+            }
+        }
+    }
+
     @Override
     public String toString() {
         return "game.SceneManager{" +

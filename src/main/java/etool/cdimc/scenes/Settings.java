@@ -1,77 +1,101 @@
 package etool.cdimc.scenes;
 
 import etool.cdimc.Constants;
+import etool.cdimc.components.ColorPicker;
 
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Settings extends JFrame {
     private final Logger logger = Constants.logger();
+    private ColorPanel colorPanel;
+    private FontPanel fontPanel;
 
     Settings() {
         logger.log(Level.INFO, "Settings");
         setTitle("Settings");
         setDefaultCloseOperation(HIDE_ON_CLOSE);
         setResizable(false);
-        setLayout(null);
         setBackground(Constants.MENU_COLOR);
-        setSize(400, 300);
+        setSize(400, 295);
         setVisible(true);
         setLocationRelativeTo(this.getParent());
 
-        addMenuBar();
-    }
+        setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 0.5;
+        gbc.weighty = 0.33;
+        gbc.fill = GridBagConstraints.BOTH;
+        add((colorPanel = new ColorPanel()), gbc);
 
-    public void addMenuBar() {
-        JMenuBar menuBar = new JMenuBar();
-        JMenu colorItem = new JMenu("Colors");
-        colorItem.addItemListener(e -> chooseColors());
-        JMenu fontItem = new JMenu("Font");
-        fontItem.addItemListener(e -> chooseFont());
+        gbc.gridx = 1;
+        gbc.weighty = 0.33;
+        gbc.weightx = 0.5;
+        add((fontPanel = new FontPanel()), gbc);
 
-        menuBar.add(colorItem);
-        menuBar.add(fontItem);
-
-        this.setJMenuBar(menuBar);
-        repaintFrame();
-    }
-
-    private void chooseColors() {
-        logger.log(Level.INFO, "Color choose setting");
-
-        JPanel panelColors = new JPanel();
-        panelColors.setLayout(null);
-        panelColors.setBounds(0, 0, 400, 300);
-
-        JButton menuColor = new JButton("MenuColor");
-        menuColor.setBounds(100, 100, 120, 20);
-        menuColor.addActionListener( e -> {
-            Color color = JColorChooser.showDialog(panelColors,"Select a menu color", Constants.MENU_COLOR);
-            SceneManager.setMenuColor(color);
-        });
-        JButton workspaceColor = new JButton("WorkspaceColor");
-        workspaceColor.setBounds(100, 150, 120, 20);
-        workspaceColor.addActionListener( e -> {
-            Color color = JColorChooser.showDialog(panelColors,"Select a workspace color", Constants.MENU_COLOR);
-            SceneManager.setWorkspaceColor(color);
-        });
-
-        panelColors.add(menuColor);
-        panelColors.add(workspaceColor);
-
-        this.getContentPane().add(panelColors);
-        repaintFrame();
-    }
-
-    private void chooseFont() {
-        logger.log(Level.INFO, "Font choose setting");
     }
 
     public void repaintFrame() {
         this.revalidate();
         this.repaint();
+    }
+
+    class ColorPanel extends JPanel {
+        private JPanel menuPanel;
+        private JPanel workspacePanel;
+
+        public ColorPanel() {
+            logger.log(Level.INFO, "Color choose setting");
+
+            setLayout(null);
+
+            ColorPicker colorPickerM = new ColorPicker();
+            colorPickerM.setPickerBounds(0,5,190,120);
+            colorPickerM.setBorder(new CompoundBorder(new TitledBorder("Menu Color"), new EmptyBorder(8, 0, 0, 0)));
+            colorPickerM.addApplyActionListener(e -> SceneManager.setMenuColor(colorPickerM.getBackground()));
+            add(colorPickerM);
+
+            ColorPicker colorPickerW = new ColorPicker();
+            colorPickerW.setPickerBounds(0,130, 190,120);
+            colorPickerW.setBorder(new CompoundBorder(new TitledBorder("Workspace Color"), new EmptyBorder(8, 0, 0, 0)));
+            colorPickerW.addApplyActionListener(e -> SceneManager.setWorkspaceColor(colorPickerW.getBackground()));
+            add(colorPickerW);
+
+            setBackground(Constants.MENU_COLOR);
+        }
+    }
+
+    class FontPanel extends JPanel {
+
+        public FontPanel() {
+            logger.log(Level.INFO, "Font choose setting");
+
+            setLayout(null);
+
+            ColorPicker colorPickerT = new ColorPicker();
+            colorPickerT.setPickerBounds(0,5,190,120);
+            colorPickerT.setBorder(new CompoundBorder(new TitledBorder("Text Color"), new EmptyBorder(8, 0, 0, 0)));
+            colorPickerT.addApplyActionListener(e -> {
+                Constants.setFontColor(colorPickerT.getBackground());
+                SceneManager.changeFont(null, Constants.FONT);
+            });
+            add(colorPickerT);
+
+            JPanel fontChooser = new JPanel();
+            fontChooser.setBounds(0,130,190,120);
+            fontChooser.setBorder(new CompoundBorder(new TitledBorder("Font Chooser"), new EmptyBorder(8, 0, 0, 0)));
+            add(fontChooser);
+
+            setBackground(Constants.MENU_COLOR);
+        }
+
     }
 
 }
