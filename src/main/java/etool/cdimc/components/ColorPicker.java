@@ -1,7 +1,9 @@
 package etool.cdimc.components;
 
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
@@ -9,10 +11,11 @@ public class ColorPicker extends JPanel {
     private int red = 0;
     private int blue = 0;
     private int green = 0;
-    private JSlider sliderR;
-    private JSlider sliderB;
-    private JSlider sliderG;
-    private JButton applyButton;
+    private final JSlider sliderR;
+    private final JSlider sliderB;
+    private final JSlider sliderG;
+    private final JButton applyButton;
+    private String title = null;
 
     public ColorPicker(){
         setLayout(null);
@@ -41,7 +44,11 @@ public class ColorPicker extends JPanel {
         add(applyButton);
     }
 
-    public void setPickerBounds(int x, int y, int width, int height) {
+    public void setPickerBounds(int x, int y) {
+        setPickerBounds(x, y, 190, 120);
+    }
+
+    private void setPickerBounds(int x, int y, int width, int height) {
         int r = height/14;
         setBounds(x, y, width, height);
         sliderR.setBounds(10, r*3, width - 20, 20);
@@ -50,7 +57,16 @@ public class ColorPicker extends JPanel {
         applyButton.setBounds(width/2 - 40, r*12, 80, 20);
     }
 
-    public void addApplyActionListener(ActionListener actionListener) {
+    public void applyActionListener(ActionListener actionListener) {
         applyButton.addActionListener(actionListener);
+    }
+
+    public void setPickerBorder(String title) {
+        this.title = title;
+        setBorder(new CompoundBorder(new TitledBorder(title), new EmptyBorder(8, 0, 0, 0)));
+    }
+
+    public String getTitle() {
+        return title;
     }
 }

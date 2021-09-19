@@ -59,7 +59,13 @@ public class SceneManager {
         repaintFrame();
     }
 
-    public static void changeFont(Component component, Font font){
+    public static void changeFont(String fontType, Color fontColor) {
+        if(fontColor!= null) Constants.setFontColor(fontColor);
+        if(fontType!= null) Constants.setFont(fontType);
+        changeFont(currentScene, Constants.FONT);
+    }
+
+    private static void changeFont(Component component, Font font){
         if(component == null) {
             component = currentScene;
         }

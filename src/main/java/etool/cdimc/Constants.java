@@ -4,10 +4,11 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+import java.util.stream.Collectors;
 
 public class Constants {
 
@@ -18,6 +19,8 @@ public class Constants {
 
     public static String LOGO_PATH = "src/main/resources/logo2.png";
     public static String LOG_FOLDER = "src/test/resources/logs";
+
+    public static Set<String> FONTS_LIST = Arrays.stream(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()).limit(30).collect(Collectors.toSet());
 
     private static final Logger logger = setUpLogger();
 
