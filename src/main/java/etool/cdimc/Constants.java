@@ -17,7 +17,8 @@ public class Constants {
     public static Font FONT = new Font("TimesRoman", Font.PLAIN, 10);
     public static Color FONT_COLOR = Color.BLACK;
 
-    public static String LOGO_PATH = "src/main/resources/logo2.png";
+    public static String REPOSITORIES_PATH = "src/main/resources/repositories/";
+    public static String LOGO_PATH = "src/main/resources/icons/logo2.png";
     public static String LOG_FOLDER = "src/test/resources/logs";
 
     public static Set<String> FONTS_LIST = Arrays.stream(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()).limit(30).collect(Collectors.toSet());

@@ -1,10 +1,17 @@
 package etool.cdimc.scenes;
 
 import etool.cdimc.Constants;
+import etool.cdimc.repository.RepositoryManager;
+import org.xml.sax.SAXException;
 
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
+import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,13 +44,14 @@ public class MenuScene extends JPanel {
         menuButtons = new JPanel();
         menuButtons.setBackground(Constants.MENU_COLOR);
         menuButtons.setBounds(
-                50, 200, 100, 400);
+                50, 100, 100, 400);
         menuButtons.setLayout(new BoxLayout(menuButtons, BoxLayout.Y_AXIS));
 
-        addButton("ConnectToDb", menuButtons, action -> workspaceScene.connectToDb());
-        addButton("Extract", menuButtons, action -> workspaceScene.extract());
-        addButton("Transform", menuButtons, action -> workspaceScene.transform());
-        addButton("Load", menuButtons, action -> workspaceScene.load());
+        chooseRepository(menuButtons);
+//        addButton("ConnectToDb", menuButtons, action -> workspaceScene.connectToDb());
+//        addButton("Extract", menuButtons, action -> workspaceScene.extract());
+//        addButton("Transform", menuButtons, action -> workspaceScene.transform());
+//        addButton("Load", menuButtons, action -> workspaceScene.load());
         addButton("Settings", menuButtons, action -> settings());
         addButton("Help", menuButtons, action -> help());
 
@@ -52,8 +60,14 @@ public class MenuScene extends JPanel {
         return menuButtons;
     }
 
-    private void addButton(String string, Container container, ActionListener actionListener){
-        JButton jButton = new JButton(string);
+    private void chooseRepository(Container container) {
+        RepositoryManager repositoryManager = new RepositoryManager();
+        container.add(repositoryManager);
+        container.add(Box.createVerticalGlue());
+    }
+
+    private void addButton(String text, Container container, ActionListener actionListener){
+        JButton jButton = new JButton(text);
         jButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         jButton.setBackground(Constants.WORKSPACE_COLOR);
         jButton.addActionListener(actionListener);
