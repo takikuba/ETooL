@@ -1,21 +1,21 @@
 <repositiories>
     <repository>
-        <name>Repo1_TXT</name>
+        <name>Repo1</name>
         <vendor>FlatFile</vendor>
         <location>Repo1_TXT</location>
     </repository>
     <repository>
-        <name>Repo2_CSV</name>
+        <name>Repo2</name>
         <vendor>CSV</vendor>
-        <location>Repo3_CSV</location>
+        <location>Repo2_CSV</location>
     </repository>
     <repository>
-        <name>Repo3_XML</name>
+        <name>Repo3</name>
         <vendor>XML</vendor>
         <location>Repo3_XML</location>
     </repository>
     <repository>
-        <name>Repo4_JSON</name>
+        <name>Repo4</name>
         <vendor>JSON</vendor>
         <location>Repo4_JSON</location>
     </repository>
