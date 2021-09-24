@@ -33,9 +33,11 @@ import java.util.stream.Collectors;
 
 public class RepositoryManager extends JPanel {
     private final Logger logger = Constants.logger();
-    private final Set<Repository> repositories = new HashSet<>();
+    private Set<Repository> repositories = new HashSet<>();
     private Repository currentRepository = null;
     private JButton buttonConnect;
+
+    public RepositoryManager(boolean test){}
 
     public RepositoryManager() {
         try{
@@ -95,7 +97,8 @@ public class RepositoryManager extends JPanel {
         addRepositoryFrame.setVisible(true);
     }
 
-    public Optional<Repository> addRepository(String repositoryName, String vendor) {
+    public boolean addRepository(String repositoryName, String vendor) {
+        System.out.println("not work");
         if(getRepositoriesNames().contains(repositoryName)) {
             JOptionPane.showMessageDialog(null, "Repository with this name already exist! \nChange name and then proceed.");
             logger.warning("Repository already exist!");
@@ -106,13 +109,13 @@ public class RepositoryManager extends JPanel {
             repositories.add(repository);
             try {
                 registerRepository();
-                return Optional.of(repository);
+                return true;
             } catch (ParserConfigurationException | TransformerException parserConfigurationException) {
                 logger.log(Level.WARNING, "ERROR: New repository not created!");
                 parserConfigurationException.printStackTrace();
             }
         }
-        return Optional.empty();
+        return false;
     }
 
     public void deleteRepository(String name) {
@@ -145,8 +148,16 @@ public class RepositoryManager extends JPanel {
                 .orElse(null);
     }
 
+    public Set<Repository> getRepositories(){
+        return repositories;
+    }
+
+    public void setRepositories(Set<Repository> repositories) {
+        this.repositories = repositories;
+    }
+
     public Set<String> getRepositoriesNames() {
-         return repositories.stream()
+         return getRepositories().stream()
                  .map(Repository::getName)
                  .collect(Collectors.toSet());
     }

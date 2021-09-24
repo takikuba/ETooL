@@ -26,11 +26,6 @@
             <version>3.19.0</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.bundlerepository</artifactId>
-            <version>4.10.9049</version>
-        </dependency>
     </dependencies>
 
     <properties>
