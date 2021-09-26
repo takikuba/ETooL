@@ -19,6 +19,7 @@ public class WorkspaceScene extends JPanel {
     public void addRepositoryLoader(RepositoryLoader repositoryLoader){
         repositoryLoader.setBackground(Constants.mixColors(Constants.MENU_COLOR, Constants.WORKSPACE_COLOR));
         repaint();
+        removeAll();
         repositoryLoader.setBounds(0,0, 200,600);
         add(repositoryLoader);
     }

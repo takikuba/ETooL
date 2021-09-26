@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <repositories>
     <repository>
-        <name>Repo2</name>
-        <vendor>CSV</vendor>
-        <location>Repo2_CSV</location>
-    </repository>
-    <repository>
         <name>Repo4</name>
         <vendor>JSON</vendor>
         <location>Repo4_JSON</location>
@@ -19,6 +14,16 @@
         <name>Repo3</name>
         <vendor>XML</vendor>
         <location>Repo3_XML</location>
+    </repository>
+    <repository>
+        <name>b</name>
+        <vendor>TXT</vendor>
+        <location>b_TXT</location>
+    </repository>
+    <repository>
+        <name>Repo2</name>
+        <vendor>CSV</vendor>
+        <location>Repo2_CSV</location>
     </repository>
     <repository>
         <name>Repo1</name>

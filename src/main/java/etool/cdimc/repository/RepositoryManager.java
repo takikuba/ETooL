@@ -34,6 +34,7 @@ public class RepositoryManager extends JPanel {
     private Set<Repository> repositories = new HashSet<>();
     private Repository currentRepository = null;
     private JButton buttonConnect;
+    private RepositoryLoader repositoryLoader;
 
     public RepositoryManager() {
         try{
@@ -53,6 +54,7 @@ public class RepositoryManager extends JPanel {
         buttonConnect = new JButton("Connect");
         buttonConnect.setEnabled(false);
         buttonConnect.addActionListener(e -> {
+            SceneManager.repaintFrame();
             loadRepository(currentRepository);
         });
 
@@ -62,7 +64,9 @@ public class RepositoryManager extends JPanel {
     }
 
     private void loadRepository(Repository repository) {
-        RepositoryLoader repositoryLoader = new RepositoryLoader(repository);
+        repositoryLoader = null;
+        repositoryLoader = new RepositoryLoader(repository);
+        repositoryLoader.revalidate();
         SceneManager.addRepository(repositoryLoader);
     }
 
@@ -194,7 +198,7 @@ public class RepositoryManager extends JPanel {
     }
 
     private void addRepositoryHomeFolder(Repository repository) {
-        boolean c = new File(Constants.REPOSITORIES_PATH + repository.getLocation() + "/tables.txt").mkdirs();
+        boolean c = new File(Constants.REPOSITORIES_PATH + repository.getLocation()).mkdirs();
         if(c){
             logger.info("Repository folder created successfully!");
         } else logger.warning("Problem with creating repository home folder.");
