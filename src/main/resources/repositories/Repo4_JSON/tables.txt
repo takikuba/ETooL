@@ -1,0 +1,1 @@
+tab1.json;row.name;row.surname;row.pesel;

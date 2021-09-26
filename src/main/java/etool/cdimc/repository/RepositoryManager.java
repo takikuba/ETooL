@@ -22,9 +22,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
@@ -36,8 +34,6 @@ public class RepositoryManager extends JPanel {
     private Set<Repository> repositories = new HashSet<>();
     private Repository currentRepository = null;
     private JButton buttonConnect;
-
-    public RepositoryManager(boolean test){}
 
     public RepositoryManager() {
         try{
@@ -66,7 +62,8 @@ public class RepositoryManager extends JPanel {
     }
 
     private void loadRepository(Repository repository) {
-        RepositoryLoader repositoryLoader = new RepositoryLoader();
+        RepositoryLoader repositoryLoader = new RepositoryLoader(repository);
+        SceneManager.addRepository(repositoryLoader);
     }
 
     private void addRepository() {
@@ -98,7 +95,6 @@ public class RepositoryManager extends JPanel {
     }
 
     public boolean addRepository(String repositoryName, String vendor) {
-        System.out.println("not work");
         if(getRepositoriesNames().contains(repositoryName)) {
             JOptionPane.showMessageDialog(null, "Repository with this name already exist! \nChange name and then proceed.");
             logger.warning("Repository already exist!");
@@ -108,7 +104,7 @@ public class RepositoryManager extends JPanel {
                                     (repositoryName) + "_" + vendor);
             repositories.add(repository);
             try {
-                registerRepository();
+                registerRepository(repository);
                 return true;
             } catch (ParserConfigurationException | TransformerException parserConfigurationException) {
                 logger.log(Level.WARNING, "ERROR: New repository not created!");
@@ -152,17 +148,13 @@ public class RepositoryManager extends JPanel {
         return repositories;
     }
 
-    public void setRepositories(Set<Repository> repositories) {
-        this.repositories = repositories;
-    }
-
     public Set<String> getRepositoriesNames() {
          return getRepositories().stream()
                  .map(Repository::getName)
                  .collect(Collectors.toSet());
     }
 
-    public void registerRepository()
+    public void registerRepository(Repository folderRepository)
             throws ParserConfigurationException, TransformerException {
 
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -193,8 +185,19 @@ public class RepositoryManager extends JPanel {
             repository.appendChild(location);
 
         }
-        writeXml(doc, System.out);
+        try {
+            writeXml(doc, new FileOutputStream(Constants.REPOSITORIES_PATH + "repositories.xml"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        addRepositoryHomeFolder(folderRepository);
+    }
 
+    private void addRepositoryHomeFolder(Repository repository) {
+        boolean c = new File(Constants.REPOSITORIES_PATH + repository.getLocation() + "/tables.txt").mkdirs();
+        if(c){
+            logger.info("Repository folder created successfully!");
+        } else logger.warning("Problem with creating repository home folder.");
     }
 
     private static void writeXml(Document doc, OutputStream output)

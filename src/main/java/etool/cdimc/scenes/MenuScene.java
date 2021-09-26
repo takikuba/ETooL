@@ -18,7 +18,6 @@ import java.util.logging.Logger;
 public class MenuScene extends JPanel {
     private final Image logo = new ImageIcon(Constants.LOGO_PATH).getImage();
     private final Logger logger = Constants.logger();
-    private final WorkspaceScene workspaceScene = new WorkspaceScene();
     private JPanel menuButtons;
 
     public MenuScene() {

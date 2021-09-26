@@ -1,5 +1,6 @@
 package etool.cdimc;
 
+import etool.cdimc.repository.Repository;
 import etool.cdimc.repository.RepositoryManager;
 import org.mockito.MockSettings;
 import org.testng.annotations.Test;
@@ -17,7 +18,7 @@ public class RepositoryManagerTest {
     @Test
     public void testAddRepository() throws ParserConfigurationException, TransformerException {
         RepositoryManager repositoryManager = mock(RepositoryManager.class);
-        doNothing().when(repositoryManager).registerRepository();
+        doNothing().when(repositoryManager).registerRepository(mock(Repository.class));
         when(repositoryManager.getRepositoriesNames()).thenReturn(Set.of("Test_repo1"));
 
         assertThat(repositoryManager.addRepository("Test_repo1", "CSV")).isFalse();

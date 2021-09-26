@@ -29,6 +29,13 @@ public class Constants {
         return logger;
     }
 
+    public static Color mixColors(Color c1, Color c2) {
+        int r = c1.getRed() + c2.getRed();
+        int g = c1.getGreen() + c2.getGreen();
+        int b = c1.getBlue() + c2.getBlue();
+        return new Color(r/2, g/2, b/2);
+    }
+
     public static void setMenuColor(Color color) {
         MENU_COLOR = color;
     }

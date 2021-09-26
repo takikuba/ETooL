@@ -1,6 +1,7 @@
 package etool.cdimc.scenes;
 
 import etool.cdimc.Constants;
+import etool.cdimc.repository.RepositoryLoader;
 
 import javax.swing.*;
 import java.awt.*;
@@ -76,6 +77,11 @@ public class SceneManager {
                 changeFont(child, font);
             }
         }
+    }
+
+    public static void addRepository(RepositoryLoader repositoryLoader) {
+        workspaceScene.setBackground(Constants.WORKSPACE_COLOR);
+        workspaceScene.addRepositoryLoader(repositoryLoader);
     }
 
     @Override
