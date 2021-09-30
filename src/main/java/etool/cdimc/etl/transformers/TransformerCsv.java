@@ -6,6 +6,8 @@ import etool.cdimc.stream.DataTransformStream;
 public class TransformerCsv implements Transformer {
     @Override
     public DataTransformStream transform(DataExtractStream data) {
+        logger.info("Run!");
+
         return null;
     }
 }

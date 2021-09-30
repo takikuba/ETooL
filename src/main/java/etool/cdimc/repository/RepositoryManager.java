@@ -1,6 +1,7 @@
 package etool.cdimc.repository;
 
 import etool.cdimc.Constants;
+import etool.cdimc.etl.model.Table;
 import etool.cdimc.scenes.SceneManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -193,6 +194,19 @@ public class RepositoryManager extends JPanel {
             e.printStackTrace();
         }
         addRepositoryHomeFolder(folderRepository);
+    }
+
+    public static void registerRepositoryTable(Repository repository, Table table) {
+        System.out.println(table.getTableWriter());
+        File file = new File(Constants.REPOSITORIES_PATH + repository.getLocation() + "/tables.txt");
+        try(FileWriter fw = new FileWriter(Constants.REPOSITORIES_PATH + repository.getLocation() + "/tables.txt", true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            PrintWriter out = new PrintWriter(bw))
+        {
+            out.println(table.getTableWriter());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void addRepositoryHomeFolder(Repository repository) {

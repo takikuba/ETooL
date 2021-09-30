@@ -7,6 +7,9 @@ import java.io.File;
 public class ExtractorJson implements Extractor{
     @Override
     public DataExtractStream extract(File data) {
+        logger.info("Run!");
+
+
         return null;
     }
 }

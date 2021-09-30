@@ -68,8 +68,6 @@ public class Constants {
             logger.addHandler(fh);
             SimpleFormatter formatter = new SimpleFormatter();
             fh.setFormatter(formatter);
-            logger.info("Initialization of logger!");
-
         } catch (SecurityException | IOException e) {
             e.printStackTrace();
         }
