@@ -2,16 +2,10 @@ package etool.cdimc.scenes;
 
 import etool.cdimc.Constants;
 import etool.cdimc.repository.RepositoryManager;
-import org.xml.sax.SAXException;
 
 import javax.swing.*;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
-import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

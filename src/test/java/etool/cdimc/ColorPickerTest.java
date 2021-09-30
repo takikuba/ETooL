@@ -1,15 +1,12 @@
 package etool.cdimc;
 
 import etool.cdimc.components.ColorPicker;
-
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.awt.*;
 
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.mock;
 
 
 public class ColorPickerTest {

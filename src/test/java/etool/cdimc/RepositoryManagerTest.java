@@ -2,13 +2,11 @@ package etool.cdimc;
 
 import etool.cdimc.repository.Repository;
 import etool.cdimc.repository.RepositoryManager;
-import org.mockito.MockSettings;
 import org.testng.annotations.Test;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;

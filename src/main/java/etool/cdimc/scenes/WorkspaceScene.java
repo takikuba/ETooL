@@ -4,7 +4,6 @@ import etool.cdimc.Constants;
 import etool.cdimc.repository.RepositoryLoader;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class WorkspaceScene extends JPanel {
     JPanel repositoryLoader;
