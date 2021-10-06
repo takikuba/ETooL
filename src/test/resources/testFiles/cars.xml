@@ -1,0 +1,18 @@
+<cars>
+    <car>
+        <mark>Ford</mark>
+        <model>Fiesta</model>
+    </car>
+    <car>
+        <mark>Ford</mark>
+        <model>Focus</model>
+    </car>
+    <car>
+        <mark>Ford</mark>
+        <model>Mondeo</model>
+    </car>
+    <car>
+        <mark>VW</mark>
+        <model>Passat</model>
+    </car>
+</cars>

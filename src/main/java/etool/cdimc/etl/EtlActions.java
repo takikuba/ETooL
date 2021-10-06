@@ -14,23 +14,24 @@ import org.apache.commons.io.FilenameUtils;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
+import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class EtlActions {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         EtlActions etlActions = new EtlActions();
         JFileChooser chooser = new JFileChooser("src/test/resources/testFiles");
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Repo files", "json", "xml", "txt", "csv");
         chooser.setFileFilter(filter);
         int retval = chooser.showOpenDialog(null);
-        if(retval == JFileChooser.APPROVE_OPTION) {
+        if (retval == JFileChooser.APPROVE_OPTION) {
             System.out.println("You chose to open this file: " +
                     chooser.getSelectedFile().getName());
             File file = chooser.getSelectedFile();
-            Repository repository = new Repository("Repo2", Vendor.CSV, "Repo2_CSV");
+            Repository repository = new Repository("Repo4", Vendor.JSON, "Repo4_JSON");
 
             Vendor inputVendor = Vendor.valueOf((FilenameUtils.getExtension(file.getName())).toUpperCase());
 
@@ -54,6 +55,7 @@ public class EtlActions {
             case XML -> {
                 extractor = new ExtractorXml();
                 output = extractor.extract(data);
+                break;
             }
             case CSV -> {
                 extractor = new ExtractorCsv();
@@ -77,7 +79,7 @@ public class EtlActions {
 
     }
 
-    public void transform(Repository repository, DataExtractStream data) {
+    private void transform(Repository repository, DataExtractStream data) {
         logger.log(Level.INFO, "transform");
         DataTransformStream output = new DataTransformStream();
         Transformer transformer;
@@ -98,6 +100,7 @@ public class EtlActions {
             case JSON -> {
                 transformer = new TransformerJson();
                 output = transformer.transform(data);
+                break;
             }
             case MYSQL -> {
                 transformer = new TransformerMysql();
@@ -105,16 +108,22 @@ public class EtlActions {
             }
         }
 
-        load(repository, output);
+        Set<String> rows = Set.of("mark", "model");
+        load(repository, output, new Table("cars", rows, repository));
     }
 
-    public void load(Repository repository, DataTransformStream output) {
+    public void load(Repository repository, DataTransformStream data, Table table) {
         logger.log(Level.INFO, "load");
         File file = new File(Constants.REPOSITORIES_PATH + repository.getLocation());
 
-        Set<String> rows = Set.of("mark", "model");
-        Table table = new Table("cars.csv", rows);
-        RepositoryManager.registerRepositoryTable(repository, table);
+        for(File f: Objects.requireNonNull(file.listFiles())){
+            if(f.getName().equals(table.getLocation())){
+                logger.warning("Table with this name already exist!");
+                table = table.changeName();
+            }
+        }
+
+        RepositoryManager.registerRepositoryTable(repository, table, data);
 
     }
 

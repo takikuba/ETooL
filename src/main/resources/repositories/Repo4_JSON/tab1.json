@@ -1,14 +1,16 @@
 {
-  "rows": [
-    {
-      "name": "Jan",
-      "surname": "Kowalski",
-      "pesel": 999999999
-    },
-    {
-      "name": "Adam",
-      "surname": "Nowak",
-      "pesel": 111111111
-    }
-  ]
+  "rows": {
+    "row": [
+      {
+        "name": "Jan",
+        "surname": "Kowalski",
+        "pesel": 999999999
+      },
+      {
+        "name": "Adam",
+        "surname": "Nowak",
+        "pesel": 111111111
+      }
+    ]
+  }
 }

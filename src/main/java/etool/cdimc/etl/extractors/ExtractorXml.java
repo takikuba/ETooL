@@ -36,20 +36,15 @@ public class ExtractorXml implements Extractor {
 
             transformer.transform(new DOMSource(doc), new StreamResult(writer));
 
-            System.out.println(writer.toString());
 
             JSONObject json = XML.toJSONObject(writer.toString());
-            DataExtractStream dataExtractStream = new DataExtractStream(json);
 
-            System.out.println(dataExtractStream.getData());
-            return dataExtractStream;
+            return new DataExtractStream(json);
 
         } catch (ParserConfigurationException | TransformerException | SAXException | IOException e) {
             logger.warning("ERROR when extract file!");
             e.printStackTrace();
-
         }
-
         return null;
     }
 }
