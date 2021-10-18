@@ -81,7 +81,7 @@ public class EtlActions {
         transform(repository, output, table);
     }
 
-    private Set<String> getColumns(DataExtractStream data) {
+    Set<String> getColumns(DataExtractStream data) {
 
         String jsonArray = data.getData().toString().substring(data.getData().toString().indexOf('[')+1, data.getData().toString().indexOf(']'));
         String[] rows = jsonArray.split("},\\{");
