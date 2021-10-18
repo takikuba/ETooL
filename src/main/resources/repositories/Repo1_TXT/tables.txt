@@ -1,1 +1,1 @@
-tab1.txt;row.mark;row.model;
+tab1.txt;column.mark;column.model;

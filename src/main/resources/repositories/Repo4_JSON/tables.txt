@@ -1,4 +1,4 @@
-tab1.json;row.name;row.surname;row.pesel;
-cars;row.mark;row.model;
-cars1;row.mark;row.model;
-cars2;row.mark;row.model;
+tab1.json;column.name;column.surname;column.pesel;
+cars;column.mark;column.model;
+cars1;column.mark;column.model;
+cars2;column.mark;column.model;

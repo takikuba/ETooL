@@ -1,8 +1,4 @@
-tab1.csv;row.Village;row.People_count;
-cars.csv;row.mark;row.model;
-cars.csv;row.mark;row.model;
-cars.csv;row.mark;row.model;
-[cars, csv1];row.mark;row.model;
-[cars, csv1];row.mark;row.model;
-[cars, csv1];row.mark;row.model;
-[cars, csv1];row.mark;row.model;
+tab1.csv;column.Village;column.People_count;
+cars.csv;column.mark;column.model;
+cars.csv;column.mark;column.model;
+cars.csv;column.mark;column.model;

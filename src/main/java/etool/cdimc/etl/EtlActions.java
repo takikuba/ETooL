@@ -10,18 +10,21 @@ import etool.cdimc.repository.Vendor;
 import etool.cdimc.stream.DataExtractStream;
 import etool.cdimc.stream.DataTransformStream;
 import org.apache.commons.io.FilenameUtils;
+//import org.everit.json.schema.loader.SchemaLoader;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
-import java.util.Objects;
-import java.util.Set;
+import java.io.IOException;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class EtlActions {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IOException {
         EtlActions etlActions = new EtlActions();
         JFileChooser chooser = new JFileChooser("src/test/resources/testFiles");
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Repo files", "json", "xml", "txt", "csv");
@@ -45,7 +48,7 @@ public class EtlActions {
         logger.log(Level.INFO, "connectToDb");
     }
 
-    public void extract(Vendor vendor, File data, Repository repository) {
+    public void extract(Vendor vendor, File data, Repository repository) throws IOException {
         logger.log(Level.INFO, "extract");
 
         DataExtractStream output = new DataExtractStream();
@@ -75,11 +78,23 @@ public class EtlActions {
             }
         }
 
-        transform(repository, output);
-
+        Table table = new Table(data.getName(), getColumns(output), repository);
+        transform(repository, output, table);
     }
 
-    private void transform(Repository repository, DataExtractStream data) {
+    private Set<String> getColumns(DataExtractStream data) throws IOException {
+        String inputStream = data.getData().toString();
+        JSONObject rawSchema = new JSONObject(new JSONTokener(inputStream));
+
+        String jsonArray = rawSchema.toString().substring(rawSchema.toString().indexOf('[')+1, rawSchema.toString().indexOf(']'));
+        System.out.println(jsonArray);
+
+        List<String> columns = new ArrayList<>();
+
+        return null;
+    }
+
+    private void transform(Repository repository, DataExtractStream data, Table table) {
         logger.log(Level.INFO, "transform");
         DataTransformStream output = new DataTransformStream();
         Transformer transformer;
@@ -108,8 +123,7 @@ public class EtlActions {
             }
         }
 
-        Set<String> rows = Set.of("mark", "model");
-        load(repository, output, new Table("cars", rows, repository));
+        load(repository, output, table);
     }
 
     public void load(Repository repository, DataTransformStream data, Table table) {

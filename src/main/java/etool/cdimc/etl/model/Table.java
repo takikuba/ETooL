@@ -9,14 +9,14 @@ import java.util.stream.Collectors;
 public class Table {
     private final String orgName;
     private String name;
-    private final Set<String> rows;
+    private final Set<String> columns;
     private final Vendor vendor;
     private static int index = 1;
 
-    public Table(String name, Set<String> rows, Repository repository){
+    public Table(String name, Set<String> columns, Repository repository){
         this.orgName = name;
         this.name = name;
-        this.rows = rows;
+        this.columns = columns;
         this.vendor = repository.getVendor();
     }
 
@@ -34,7 +34,7 @@ public class Table {
     }
 
     public String getTableWriter() {
-        Set<String> newRows = rows.stream().map(str -> ";row." + str).collect(Collectors.toSet());
-        return name + String.join("", newRows) + ';';
+        Set<String> newColumns = columns.stream().map(str -> ";column." + str).collect(Collectors.toSet());
+        return name + String.join("", newColumns) + ';';
     }
 }

@@ -1,1 +1,1 @@
-tab1.xml;row.name;row.surname;row.age;
+tab1.xml;column.name;column.surname;column.age;

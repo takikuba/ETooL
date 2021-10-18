@@ -1,14 +1,14 @@
 <table>
-    <rows>
-        <row>
+    <columns>
+        <column>
             <name>Jan</name>
             <surname>Kowalski</surname>
             <age>10</age>
-        </row>
-        <row>
+        </column>
+        <column>
             <name>Adam</name>
             <surname>Nowak</surname>
             <age>13</age>
-        </row>
-    </rows>
+        </column>
+    </columns>
 </table>

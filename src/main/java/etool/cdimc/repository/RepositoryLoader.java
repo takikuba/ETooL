@@ -39,7 +39,7 @@ public class RepositoryLoader extends JPanel {
         String element;
         while (sc.hasNext()){
             element = sc.next();
-            if(element.startsWith("row")){
+            if(element.startsWith("column")){
                 element = "   " + element.split("\\.")[1];
             } else {
                 element = element.split("\\.")[0];

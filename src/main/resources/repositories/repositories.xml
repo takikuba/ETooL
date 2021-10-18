@@ -16,11 +16,6 @@
         <location>Repo3_XML</location>
     </repository>
     <repository>
-        <name>b</name>
-        <vendor>TXT</vendor>
-        <location>b_TXT</location>
-    </repository>
-    <repository>
         <name>Repo2</name>
         <vendor>CSV</vendor>
         <location>Repo2_CSV</location>
