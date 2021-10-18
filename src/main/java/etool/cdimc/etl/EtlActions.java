@@ -23,6 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class EtlActions {
+    private final Logger logger = Logger.getLogger("EtlActions");
 
     public static void main(String[] args) throws InterruptedException, IOException {
         EtlActions etlActions = new EtlActions();
@@ -41,8 +42,6 @@ public class EtlActions {
             etlActions.extract(inputVendor, file, repository);
         }
     }
-
-    private final Logger logger = Logger.getLogger("EtlActions");
 
     public void connectToDb(){
         logger.log(Level.INFO, "connectToDb");
@@ -78,20 +77,24 @@ public class EtlActions {
             }
         }
 
-        Table table = new Table(data.getName(), getColumns(output), repository);
+        Table table = new Table(FilenameUtils.getBaseName(data.getName()), getColumns(output), repository);
         transform(repository, output, table);
     }
 
-    private Set<String> getColumns(DataExtractStream data) throws IOException {
-        String inputStream = data.getData().toString();
-        JSONObject rawSchema = new JSONObject(new JSONTokener(inputStream));
+    private Set<String> getColumns(DataExtractStream data) {
 
-        String jsonArray = rawSchema.toString().substring(rawSchema.toString().indexOf('[')+1, rawSchema.toString().indexOf(']'));
-        System.out.println(jsonArray);
+        String jsonArray = data.getData().toString().substring(data.getData().toString().indexOf('[')+1, data.getData().toString().indexOf(']'));
+        String[] rows = jsonArray.split("},\\{");
+        String[] columns = rows[0].split(",");
 
-        List<String> columns = new ArrayList<>();
+        Set<String> columnNames = new HashSet<>();
+        for(String col: columns) {
+            columnNames.add(col.substring(col.indexOf("\"")+1, col.indexOf("\":")));
+        }
 
-        return null;
+        logger.info("Extract following columns from source: " + columnNames);
+
+        return columnNames;
     }
 
     private void transform(Repository repository, DataExtractStream data, Table table) {
