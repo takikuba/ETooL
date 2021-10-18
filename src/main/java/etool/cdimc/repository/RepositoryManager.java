@@ -1,7 +1,7 @@
 package etool.cdimc.repository;
 
 import etool.cdimc.Constants;
-import etool.cdimc.etl.model.Table;
+import etool.cdimc.models.Table;
 import etool.cdimc.scenes.SceneManager;
 import etool.cdimc.stream.DataTransformStream;
 import org.w3c.dom.Document;

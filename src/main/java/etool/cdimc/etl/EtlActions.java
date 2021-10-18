@@ -2,23 +2,20 @@ package etool.cdimc.etl;
 
 import etool.cdimc.Constants;
 import etool.cdimc.etl.extractors.*;
-import etool.cdimc.etl.model.Table;
 import etool.cdimc.etl.transformers.*;
+import etool.cdimc.models.Table;
 import etool.cdimc.repository.Repository;
 import etool.cdimc.repository.RepositoryManager;
 import etool.cdimc.repository.Vendor;
 import etool.cdimc.stream.DataExtractStream;
 import etool.cdimc.stream.DataTransformStream;
 import org.apache.commons.io.FilenameUtils;
-//import org.everit.json.schema.loader.SchemaLoader;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,20 +24,21 @@ public class EtlActions {
 
     public static void main(String[] args) throws InterruptedException, IOException {
         EtlActions etlActions = new EtlActions();
-        JFileChooser chooser = new JFileChooser("src/test/resources/testFiles");
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Repo files", "json", "xml", "txt", "csv");
-        chooser.setFileFilter(filter);
-        int retval = chooser.showOpenDialog(null);
-        if (retval == JFileChooser.APPROVE_OPTION) {
-            System.out.println("You chose to open this file: " +
-                    chooser.getSelectedFile().getName());
-            File file = chooser.getSelectedFile();
+//        JFileChooser chooser = new JFileChooser("src/test/resources/testFiles");
+//        FileNameExtensionFilter filter = new FileNameExtensionFilter("Repo files", "json", "xml", "txt", "csv");
+//        chooser.setFileFilter(filter);
+//        int retval = chooser.showOpenDialog(null);
+//        if (retval == JFileChooser.APPROVE_OPTION) {
+//            System.out.println("You chose to open this file: " +
+//                    chooser.getSelectedFile().getName());
+//            File file = chooser.getSelectedFile();
+//    }
+            File fileCsv = new File("src/test/resources/testFiles" + "/persons.csv");
             Repository repository = new Repository("Repo4", Vendor.JSON, "Repo4_JSON");
 
-            Vendor inputVendor = Vendor.valueOf((FilenameUtils.getExtension(file.getName())).toUpperCase());
+            Vendor inputVendor = Vendor.CSV;
 
-            etlActions.extract(inputVendor, file, repository);
-        }
+            etlActions.extract(inputVendor, fileCsv, repository);
     }
 
     public void connectToDb(){
@@ -57,7 +55,6 @@ public class EtlActions {
             case XML -> {
                 extractor = new ExtractorXml();
                 output = extractor.extract(data);
-                break;
             }
             case CSV -> {
                 extractor = new ExtractorCsv();

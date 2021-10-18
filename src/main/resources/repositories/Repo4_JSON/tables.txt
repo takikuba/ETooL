@@ -2,3 +2,4 @@ tab1.json;column.name;column.surname;column.pesel;
 cars;column.mark;column.model;
 cars1;column.mark;column.model;
 cars2;column.mark;column.model;
+persons;column.surname;column.name;

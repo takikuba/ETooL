@@ -1,4 +1,4 @@
-package etool.cdimc.etl.model;
+package etool.cdimc.models;
 
 import etool.cdimc.repository.Repository;
 import etool.cdimc.repository.Vendor;
