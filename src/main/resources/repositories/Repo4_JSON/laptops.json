@@ -1,0 +1,19 @@
+{
+  "laptops": [
+    {
+      "ramCount": "16",
+      "model": "x3",
+      "mark": "asus"
+    },
+    {
+      "ramCount": "32",
+      "model": "insirion4",
+      "mark": "dell"
+    },
+    {
+      "ramCount": "12",
+      "model": "legion",
+      "mark": "lenovo"
+    }
+  ]
+}

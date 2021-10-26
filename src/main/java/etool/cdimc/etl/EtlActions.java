@@ -33,10 +33,10 @@ public class EtlActions {
 //                    chooser.getSelectedFile().getName());
 //            File file = chooser.getSelectedFile();
 //    }
-            File fileCsv = new File("src/test/resources/testFiles" + "/persons.csv");
+            File fileCsv = new File("src/test/resources/testFiles" + "/laptops.txt");
             Repository repository = new Repository("Repo4", Vendor.JSON, "Repo4_JSON");
 
-            Vendor inputVendor = Vendor.CSV;
+            Vendor inputVendor = Vendor.TXT;
 
             etlActions.extract(inputVendor, fileCsv, repository);
     }
