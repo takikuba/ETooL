@@ -22,7 +22,7 @@ public class ExtractorCsv implements Extractor{
 
         try {
             InputStream in = new FileInputStream(data);
-            CsvModel csv = new CsvModel(true, ',', in );
+            CsvModel csv = new CsvModel(in);
             List<String> fieldNames = null;
             if (csv.hasNext()) fieldNames = new ArrayList<>(csv.next());
             List<HashMap<String, String>> list = new ArrayList<>();

@@ -5,41 +5,37 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CsvModel {
-    static final private int NUMMARK = 10;
+public class TxtModel {
+    static final private int NUMMARK = 2;
     static final private char CRETURN = '\r';
     static final private char LFEED = '\n';
     static final private char COMMENT = '#';
 
     private final boolean stripMultipleNewlines;
 
+    private final char separator;
     private final ArrayList<String> fields = new ArrayList<>();
     private boolean eofSeen = false;
     private final Reader in;
 
-    public CsvModel(InputStream input) {
-        this(true, input);
-    }
-
-    public CsvModel(boolean stripMultipleNewlines, InputStream input) {
+    public TxtModel(boolean stripMultipleNewlines, char separator, InputStream input) throws IOException {
         this.stripMultipleNewlines = stripMultipleNewlines;
+        this.separator = separator;
         this.in = new BufferedReader(stripBom(input));
     }
 
+    public TxtModel(InputStream input, char separator) throws IOException {
+        this.stripMultipleNewlines = true;
+        this.separator = separator;
+        this.in = new BufferedReader(stripBom(input));
+    }
 
     public boolean hasNext() throws IOException {
-        if (eofSeen) {
-            return false;
-        }
-
+        if ( eofSeen ) return false;
         fields.clear();
-        eofSeen = split(in, fields);
-
-        if (eofSeen) {
-            return ! fields.isEmpty();
-        } else {
-            return true;
-        }
+        eofSeen = split( in, fields );
+        if ( eofSeen ) return ! fields.isEmpty();
+        else return true;
     }
 
     public List<String> next() {
@@ -55,9 +51,9 @@ public class CsvModel {
         if (stripMultiple) {
             in.mark(NUMMARK);
             int value = in.read();
-            while (value != -1) {
+            while ( value != -1 ) {
                 char c = (char)value;
-                if (c != CRETURN && c != LFEED) {
+                if ( c != CRETURN && c != LFEED ) {
                     in.reset();
                     return false;
                 } else {
@@ -70,40 +66,42 @@ public class CsvModel {
             in.mark(NUMMARK);
             int value = in.read();
             if ( value == -1 ) return true;
-            else if ((char)value != LFEED) in.reset();
+            else if ( (char)value != LFEED ) in.reset();
             return false;
         }
     }
 
     private boolean split(Reader in,ArrayList<String> fields) throws IOException {
-        StringBuilder sbuf = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
         int value;
-        while ((value = in.read()) != -1) {
+        while ( (value = in.read()) != -1 ) {
             char c = (char)value;
             switch(c) {
                 case CRETURN:
-                    addIfExist(fields, sbuf);
-                    return discardLinefeed(in, stripMultipleNewlines);
+                    if ( stringBuilder.length() > 0 ) {
+                        addIfExist(fields, stringBuilder);
+                    }
+                    return discardLinefeed( in, stripMultipleNewlines );
 
                 case LFEED:
-                    addIfExist(fields, sbuf);
+                    if ( stringBuilder.length() > 0 ) {
+                        addIfExist(fields, stringBuilder);
+                    }
                     return discardLinefeed( in, true);
 
                 default:
-                    if (c == ',') {
-                        addIfExist(fields, sbuf);
+                    if ( c == separator ) {
+                        addIfExist(fields, stringBuilder);
                     }
                     else {
-                        if (c == COMMENT && fields.isEmpty() &&
-                                sbuf.toString().trim().isEmpty() ) {
-                            sbuf.delete(0, sbuf.length());
-                        } else {
-                            sbuf.append(c);
-                        }
+                        if ( c == COMMENT && fields.isEmpty() &&
+                                stringBuilder.toString().trim().isEmpty() ) {
+                            stringBuilder.delete(0, stringBuilder.length());
+                        } else stringBuilder.append(c);
                     }
             }
         }
-        addIfExist(fields, sbuf);
+        addIfExist(fields, stringBuilder);
         return true;
     }
 

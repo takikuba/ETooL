@@ -1,0 +1,4 @@
+column.mark;column.model;column.ramCount
+asus;x3;16
+dell;insirion4;32
+lenovo;legion;12
