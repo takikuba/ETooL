@@ -1,9 +1,11 @@
 package etool.cdimc.etl;
 
 import etool.cdimc.Constants;
+import etool.cdimc.connectors.PostgreSQLConnector;
 import etool.cdimc.etl.extractors.*;
 import etool.cdimc.etl.transformers.*;
 import etool.cdimc.models.Table;
+import etool.cdimc.parser.PsqlParser;
 import etool.cdimc.repository.Repository;
 import etool.cdimc.repository.RepositoryManager;
 import etool.cdimc.repository.Vendor;
@@ -13,6 +15,8 @@ import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -22,7 +26,7 @@ import java.util.logging.Logger;
 public class EtlActions {
     private final Logger logger = Logger.getLogger("EtlActions");
 
-    public static void main(String[] args) throws InterruptedException, IOException {
+    public static void main(String[] args) throws InterruptedException, IOException, SQLException, ClassNotFoundException {
         EtlActions etlActions = new EtlActions();
 //        JFileChooser chooser = new JFileChooser("src/test/resources/testFiles");
 //        FileNameExtensionFilter filter = new FileNameExtensionFilter("Repo files", "json", "xml", "txt", "csv");
@@ -33,12 +37,16 @@ public class EtlActions {
 //                    chooser.getSelectedFile().getName());
 //            File file = chooser.getSelectedFile();
 //    }
-            File fileCsv = new File("src/test/resources/testFiles" + "/persons.csv");
+
+        Connection psql = PostgreSQLConnector.connect("jdbc:postgresql://localhost/etlTEST", "admin2", "admin");
+        PsqlParser parser = new PsqlParser(psql);
+
+//            File fileCsv = new File("src/test/resources/testFiles" + "/persons.csv");
             Repository repository = new Repository("Repo4", Vendor.JSON, "Repo4_JSON");
-
-            Vendor inputVendor = Vendor.CSV;
-
-            etlActions.extract(inputVendor, fileCsv, repository);
+//
+            Vendor inputVendor = Vendor.MYSQL;
+//
+//            etlActions.extract(inputVendor, fileCsv, repository);
     }
 
     public void connectToDb(){
