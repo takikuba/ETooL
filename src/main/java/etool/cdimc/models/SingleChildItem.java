@@ -8,18 +8,11 @@ import java.util.Map;
 
 public class SingleChildItem {
     private final ArrayList<BaseItem> children = new ArrayList<>();
+    private final ArrayList<String> items = new ArrayList<>();
+    private BaseItem parent;
 
-    public SingleChildItem(BaseItem item) {
-        children.add(item);
-    }
-
-    public SingleChildItem(String name) {
-        children.add(new BaseItem() {
-            @Override
-            public String getName() {
-                return name;
-            }
-        });
+    public SingleChildItem(BaseItem parent) {
+        this.parent = parent;
     }
 
     public BaseItem getOrCreateChild(String name){
@@ -35,11 +28,16 @@ public class SingleChildItem {
             }
         };
 
+        items.add(name);
         children.add(item);
         return item;
     }
 
     public ArrayList<BaseItem> getChildren() {
         return children;
+    }
+
+    public ArrayList<String> getChildrenNames() {
+        return items;
     }
 }
