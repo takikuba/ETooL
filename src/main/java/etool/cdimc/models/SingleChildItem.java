@@ -2,42 +2,36 @@ package etool.cdimc.models;
 
 import com.fasterxml.jackson.databind.ser.Serializers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.function.BiFunction;
 
-public class SingleChildItem {
-    private final ArrayList<BaseItem> children = new ArrayList<>();
-    private final ArrayList<String> items = new ArrayList<>();
-    private BaseItem parent;
+public class SingleChildItem<T extends BaseItem> extends BaseModelItem {
+    private final ChildMapper<T> childMapper;
 
-    public SingleChildItem(BaseItem parent) {
-        this.parent = parent;
+    public SingleChildItem(String name, BaseModelItem parent) {
+        super(name, parent);
+        childMapper = new ChildMapper<>(null);
     }
 
-    public BaseItem getOrCreateChild(String name){
-        for(BaseItem item: children){
-            if(item.getName().equals(name)){
-                return item;
-            }
-        }
-        BaseItem item = new BaseItem() {
-            @Override
-            public String getName() {
-                return name;
-            }
-        };
-
-        items.add(name);
-        children.add(item);
-        return item;
+    protected final T getOrCreateChild(String childName, BiFunction<String, BaseModelItem, T> childCreator) {
+        return childMapper.getOrCreateChild(childName, this, childCreator);
     }
 
-    public ArrayList<BaseItem> getChildren() {
-        return children;
+    public Iterator<BaseItem> iterator() {
+        return childMapper.iterator();
     }
 
-    public ArrayList<String> getChildrenNames() {
-        return items;
+    public Collection<T> getChildren() {
+        return childMapper.getChildren();
     }
+
+    public Set<String> getChildrenNames() {
+        return childMapper.getChildrenNames();
+    }
+
+    public void removeChild(BaseItem item) {
+        childMapper.removeChildItem(item);
+    }
+
+
 }

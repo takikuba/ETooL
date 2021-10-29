@@ -1,15 +1,11 @@
 package etool.cdimc.parser;
 
 import etool.cdimc.Constants;
-import etool.cdimc.models.BaseItem;
 import etool.cdimc.models.RelationalModel;
+import etool.cdimc.stream.DataColumnStream;
 
-import javax.xml.transform.Result;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class PsqlParser {
@@ -23,21 +19,22 @@ public class PsqlParser {
     private RelationalModel.Schema schema;
     private RelationalModel.Table table;
     private Set<RelationalModel.Column> columns;
+    private Set<String> columnsNames;
 
     public PsqlParser(Connection connection) throws SQLException {
         this.connection = connection;
-        this.host = new RelationalModel.DataBase(connection.getCatalog());
+        this.host = new RelationalModel.DataBase(connection.getCatalog(), null);
         logger.info("Get following database: " + connection.getCatalog());
         getSchemas();
-        schema = new RelationalModel.Schema(host,"ETL");
-        table = new RelationalModel.Table(schema,"students");
-        columns = Set.of(new RelationalModel.Column(table,"name"), new RelationalModel.Column(table, "album"));
+        schema = host.getOrCreateSchema("ETL");
+        table = schema.getOrCreateTable("students");
+        columns = Set.of(table.getOrCreateColumn("name"), table.getOrCreateColumn("album"));
         getTables();
         getColumns();
         getColumnValues();
     }
 
-    private ArrayList<BaseItem> getSchemas() throws SQLException {
+    private Collection<RelationalModel.Schema> getSchemas() throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery("select nspname from pg_catalog.pg_namespace;");
 
@@ -52,47 +49,80 @@ public class PsqlParser {
         return host.getChildren();
     }
 
-    private ArrayList<BaseItem> getTables() throws SQLException {
+    public Collection <RelationalModel.Table> getTables(String schema) throws SQLException {
+        if(host.getChildrenNames().contains(schema)){
+            this.schema = host.getOrCreateSchema(schema);
+            return getTables();
+        } else {
+            logger.warning("ERROR: schema not found!");
+        }
+        return null;
+    }
+
+    private Collection<RelationalModel.Table> getTables() throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery("select * from information_schema.tables where table_schema = '" + schema.getName() +"';");
         String table = "";
         while(result.next()) {
             table = result.getString("table_name");
-            schema.getOrCreateChild(table);
+            schema.getOrCreateTable(table);
         }
         logger.info("Extract following tables: " + schema.getChildrenNames());
 
         return schema.getChildren();
     }
 
-    private ArrayList<BaseItem> getColumns() throws SQLException {
+    public Collection<RelationalModel.Column> getColumns(String table) throws SQLException {
+        if(schema.getChildrenNames().contains(table)) {
+            this.table = schema.getOrCreateTable(table);
+            getColumns();
+        } else {
+            logger.warning("ERROR: schema not found!");
+        }
+        return null;
+    }
+
+    private Collection<RelationalModel.Column> getColumns() throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery("select * from information_schema.columns where table_name = '" + table.getName() + "';");
         String column = "";
         while(result.next()) {
             column = result.getString("column_name");
-            table.getOrCreateChild(column);
+            table.getOrCreateColumn(column);
         }
+        columnsNames = table.getChildrenNames();
         logger.info("Extract following columns: " + table.getChildrenNames());
         return table.getChildren();
     }
 
-    private HashMap<RelationalModel.Column, ArrayList<String>> getColumnValues() throws SQLException {
+    public DataColumnStream getColumnValues(Set<String> columns) throws SQLException {
+        this.columns = new HashSet<RelationalModel.Column>();
+        columns.forEach( col -> {
+                    if (columnsNames.contains(col)) {
+                        this.columns.add(table.getOrCreateColumn(col));
+                    } else {
+                        logger.warning(col + " can't be process!");
+                    }
+                });
+        return getColumnValues();
+    }
+
+    private DataColumnStream getColumnValues() throws SQLException {
         Statement statement = connection.createStatement();
-        HashMap<RelationalModel.Column, ArrayList<String>> columnValues = new HashMap<>();
+        DataColumnStream data = new DataColumnStream();
         for(RelationalModel.Column col: columns){
             String query = "select " + col.getName() + " from \"" + schema.getName() + "\"." + table.getName() + ";";
             ResultSet result = statement.executeQuery(query);
-            String column = "";
+            data.addColumn(col.getName());
             ArrayList<String> values = new ArrayList<>();
             while(result.next()) {
-                column = result.getString(col.getName());
-                values.add(column);
+                data.addColumnValue(col.getName(), result.getString(col.getName()));
             }
-            columnValues.put(col, values);
+            data.addColumn(col.getName(), values);
         }
-        logger.info("Extract following columns: " + columnValues.toString());
-        return columnValues;
+
+        logger.info("Extract values for following columns: " + data.toString());
+        return data;
     }
 
 }

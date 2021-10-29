@@ -4,86 +4,45 @@ import java.util.ArrayList;
 
 public class RelationalModel {
 
-    static public class DataBase extends SingleChildItem implements BaseItem {
-        private final String name;
+    static public class DataBase extends SingleChildItem<Schema> {
 
-        public DataBase(String name){
-            super(null);
-            this.name = name;
+        public DataBase(String name, BaseModelItem parent){
+            super(name, parent);
         }
 
-        public void getOrCreateSchema(String name) {
-            getOrCreateChild(name);
-        }
-
-        @Override
-        public String toString() {
-            return "DataBase{" +
-                    "items=" + getChildrenNames() +
-                    '}';
-        }
-
-        @Override
-        public String getName() {
-            return name;
+        public Schema getOrCreateSchema(String name) {
+            return getOrCreateChild(name, Schema::new);
         }
     }
 
-    static public class Schema extends SingleChildItem implements BaseItem {
-        private String name;
+    static public class Schema extends SingleChildItem<Table> {
+        private ChildMapper<Table> childMapper;
 
-        public Schema(BaseItem item, String name) {
-            super(item);
-            this.name = name;
+        public Schema(String name, BaseModelItem parent) {
+            super(name, parent);
         }
 
         public Table getOrCreateTable(String name) {
-            return (Table) this.getOrCreateChild(name);
-        }
-
-        @Override
-        public String getName() {
-            return name;
-        }
-
-        @Override
-        public String toString() {
-            return "Schema{" +
-                    "name='" + name + '\'' +
-                    '}';
+            return getOrCreateChild(name, Table::new);
         }
     }
 
-    static public class Table extends SingleChildItem implements BaseItem {
-        private final String name;
+    static public class Table extends SingleChildItem<Column> {
+        private ChildMapper<Column> childMapper;
 
-        public Table(BaseItem parent, String name){
-            super(parent);
-            this.name = name;
+        public Table(String name, BaseModelItem parent){
+            super(name, parent);
         }
 
         public Column getOrCreateColumn(String name) {
-            return (Column) this.getOrCreateChild(name);
-        }
-
-        @Override
-        public String getName() {
-            return name;
+            return getOrCreateChild(name, Column::new);
         }
     }
 
-    static public class Column implements BaseItem {
-        private final String name;
-        private final BaseItem parent;
+    static public class Column extends BaseModelItem {
 
-        public Column(BaseItem parent, String name) {
-            this.parent = parent;
-            this.name = name;
-        }
-
-        @Override
-        public String getName() {
-            return this.name;
+        public Column(String name, BaseModelItem parent) {
+            super(name, parent);
         }
     }
 
