@@ -31,7 +31,10 @@ public class PsqlParser {
         columns = Set.of(table.getOrCreateColumn("name"), table.getOrCreateColumn("album"));
         getTables();
         getColumns();
-        getColumnValues();
+    }
+
+    public DataColumnStream getOutput() throws SQLException {
+        return getColumnValues();
     }
 
     private Collection<RelationalModel.Schema> getSchemas() throws SQLException {
@@ -109,16 +112,14 @@ public class PsqlParser {
 
     private DataColumnStream getColumnValues() throws SQLException {
         Statement statement = connection.createStatement();
-        DataColumnStream data = new DataColumnStream();
+        DataColumnStream data = new DataColumnStream(table.getName());
         for(RelationalModel.Column col: columns){
             String query = "select " + col.getName() + " from \"" + schema.getName() + "\"." + table.getName() + ";";
             ResultSet result = statement.executeQuery(query);
             data.addColumn(col.getName());
-            ArrayList<String> values = new ArrayList<>();
             while(result.next()) {
                 data.addColumnValue(col.getName(), result.getString(col.getName()));
             }
-            data.addColumn(col.getName(), values);
         }
 
         logger.info("Extract values for following columns: " + data.toString());

@@ -1,4 +1,4 @@
-package etool.cdimc.models;
+package etool.cdimc.utils;
 
 import java.util.*;
 import java.util.function.BiFunction;

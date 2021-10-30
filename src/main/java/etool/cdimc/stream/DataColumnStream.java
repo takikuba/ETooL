@@ -11,14 +11,35 @@ public class DataColumnStream {
 
     private Logger logger = Constants.logger();
     private HashMap<String, ArrayList<String>> columnDataMap = new HashMap<>();
+    private final String name;
+    private String exampleColumn;
 
-    public DataColumnStream(){}
+    public DataColumnStream(String name){
+        this.name = name;
+    }
 
-    public DataColumnStream(String column, ArrayList<String> values) {
-        columnDataMap.put(column, values);
+    public String getName() {
+        return name;
+    }
+
+    public String getFirstColumn() {
+        return (String) getColumns().toArray()[0];
+    }
+
+    public int getColumnValuesSize() {
+        return columnDataMap.get(exampleColumn).size();
+    }
+
+    public int getColumnSize() {
+        return columnDataMap.size();
+    }
+
+    public String getIndexColumnValue(String column, int index) {
+        return columnDataMap.get(column).get(index);
     }
 
     public void addColumn(String column) {
+        this.exampleColumn = column;
         columnDataMap.put(column, new ArrayList<>());
     }
 
@@ -49,7 +70,7 @@ public class DataColumnStream {
     }
 
     public DataColumnStream getFilteredDataStream(Set<String> columns) {
-        DataColumnStream dcs = new DataColumnStream();
+        DataColumnStream dcs = new DataColumnStream(this.name);
         columns.forEach(col -> {
             if (columnDataMap.containsKey(col)) {
                 dcs.addColumn(col, columnDataMap.get(col));

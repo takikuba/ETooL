@@ -2,6 +2,7 @@ package etool.cdimc.etl;
 
 import etool.cdimc.Constants;
 import etool.cdimc.connectors.PostgreSQLConnector;
+import etool.cdimc.db.DbFile;
 import etool.cdimc.etl.extractors.*;
 import etool.cdimc.etl.transformers.*;
 import etool.cdimc.models.Table;
@@ -41,12 +42,12 @@ public class EtlActions {
         Connection psql = PostgreSQLConnector.connect("jdbc:postgresql://localhost/etlTEST", "admin2", "admin");
         PsqlParser parser = new PsqlParser(psql);
 
-//            File fileCsv = new File("src/test/resources/testFiles" + "/persons.csv");
-            Repository repository = new Repository("Repo4", Vendor.JSON, "Repo4_JSON");
+        Repository repository = new Repository("Repo4", Vendor.JSON, "Repo4_JSON");
+        File file = DbFile.getDbFile(parser.getOutput(), repository);
 //
-            Vendor inputVendor = Vendor.MYSQL;
+        Vendor inputVendor = Vendor.MYSQL;
 //
-//            etlActions.extract(inputVendor, fileCsv, repository);
+        etlActions.extract(inputVendor, file, repository);
     }
 
     public void connectToDb(){

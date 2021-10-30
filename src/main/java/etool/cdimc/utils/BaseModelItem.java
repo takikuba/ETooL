@@ -1,4 +1,4 @@
-package etool.cdimc.models;
+package etool.cdimc.utils;
 
 public class BaseModelItem implements BaseItem {
 

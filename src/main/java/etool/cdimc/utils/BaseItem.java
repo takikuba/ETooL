@@ -1,4 +1,4 @@
-package etool.cdimc.models;
+package etool.cdimc.utils;
 
 public interface BaseItem {
 
