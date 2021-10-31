@@ -3,3 +3,4 @@ cars;column.mark;column.model;
 cars1;column.mark;column.model;
 cars2;column.mark;column.model;
 persons;column.surname;column.name;
+students;column.name;column.album;

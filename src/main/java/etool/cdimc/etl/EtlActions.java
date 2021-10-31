@@ -84,6 +84,7 @@ public class EtlActions {
         }
 
         Table table = new Table(FilenameUtils.getBaseName(data.getName()), getColumns(output), repository);
+        DbFile.cleanRepository(repository);
         transform(repository, output, table);
     }
 
@@ -147,7 +148,6 @@ public class EtlActions {
         }
 
         RepositoryManager.registerRepositoryTable(repository, table, data);
-
     }
 
 }

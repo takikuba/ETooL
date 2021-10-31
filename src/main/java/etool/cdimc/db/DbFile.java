@@ -3,11 +3,16 @@ package etool.cdimc.db;
 import etool.cdimc.Constants;
 import etool.cdimc.repository.Repository;
 import etool.cdimc.stream.DataColumnStream;
+import etool.cdimc.stream.DataExtractStream;
+import etool.cdimc.stream.DataTransformStream;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class DbFile {
 
@@ -36,7 +41,11 @@ public class DbFile {
         File[] files = file.listFiles();
         for(File f: files) {
             if(f.getName().endsWith("tmp")) {
-                f.delete();
+                if(f.delete()){
+                    Constants.logger().info(f.getName() + " file deleted successfully!");
+                } else {
+                    Constants.logger().warning("Failed to delete " + f.getName() + " file!");
+                }
             }
         }
     }

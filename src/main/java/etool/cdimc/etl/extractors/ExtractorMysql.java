@@ -2,6 +2,7 @@ package etool.cdimc.etl.extractors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import etool.cdimc.db.DbFile;
 import etool.cdimc.models.ColumnModel;
 import etool.cdimc.models.CsvModel;
 import etool.cdimc.stream.DataExtractStream;
@@ -41,7 +42,7 @@ public class ExtractorMysql implements Extractor{
             String output = mapper.writeValueAsString(list);
 
             output = "{ \"" + FilenameUtils.getBaseName(data.getName()) + "\":" + output + "}";
-            System.out.println(output);
+            in.close();
             return new DataExtractStream(output);
         } catch (IOException e) {
             e.printStackTrace();
