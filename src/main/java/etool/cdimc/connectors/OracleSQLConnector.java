@@ -1,21 +1,20 @@
 package etool.cdimc.connectors;
 
-import etool.cdimc.parser.PsqlParser;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class PostgreSQLConnector implements SQLConnector {
-
+public class OracleSQLConnector implements SQLConnector {
+    @Override
     public Connection connect(String url, String user, String password) throws ClassNotFoundException, SQLException {
-        Class.forName("org.postgresql.Driver");
+        Class.forName("oracle.jdbc.driver.OracleDriver");
         return DriverManager.getConnection(url, user, password);
     }
 
+    @Override
     public boolean testConnection(String url, String user, String password) {
         try {
-            Class.forName("org.postgresql.Driver");
+            Class.forName("oracle.jdbc.driver.OracleDriver");
             DriverManager.getConnection(url, user, password);
             return true;
         } catch (SQLException | ClassNotFoundException throwables) {
@@ -23,9 +22,4 @@ public class PostgreSQLConnector implements SQLConnector {
         }
         return false;
     }
-
-    public Class getParser() {
-        return PsqlParser.class;
-    }
-
 }

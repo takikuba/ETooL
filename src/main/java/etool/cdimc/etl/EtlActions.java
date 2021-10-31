@@ -39,14 +39,12 @@ public class EtlActions {
 //            File file = chooser.getSelectedFile();
 //    }
 
-        Connection psql = PostgreSQLConnector.connect("jdbc:postgresql://localhost/etlTEST", "admin2", "admin");
+        Connection psql = new PostgreSQLConnector().connect("jdbc:postgresql://localhost/etlTEST", "admin2", "admin");
         PsqlParser parser = new PsqlParser(psql);
 
         Repository repository = new Repository("Repo4", Vendor.JSON, "Repo4_JSON");
         File file = DbFile.getDbFile(parser.getOutput(), repository);
-//
         Vendor inputVendor = Vendor.MYSQL;
-//
         etlActions.extract(inputVendor, file, repository);
     }
 

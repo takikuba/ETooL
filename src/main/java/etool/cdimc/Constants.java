@@ -1,11 +1,14 @@
 package etool.cdimc;
 
+import etool.cdimc.connectors.PostgreSQLConnector;
+
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
@@ -13,6 +16,8 @@ import java.util.logging.SimpleFormatter;
 import java.util.stream.Collectors;
 
 public class Constants {
+
+    public static final String CONNECTORS_ICON = "src/main/resources/icons/connectorIcons/";
 
     public static Color MENU_COLOR = Color.LIGHT_GRAY;
     public static Color WORKSPACE_COLOR = Color.GRAY;
