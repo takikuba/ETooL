@@ -5,3 +5,4 @@ cars2;column.mark;column.model;
 persons;column.surname;column.name;
 students;column.name;column.album;
 laptops;column.mark;column.ramCount;column.model;
+country;column.name;column.count;
