@@ -11,6 +11,8 @@ import etool.cdimc.stream.DataExtractStream;
 import etool.cdimc.stream.DataTransformStream;
 import org.apache.commons.io.FilenameUtils;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
@@ -21,31 +23,30 @@ import java.util.logging.Logger;
 
 public class EtlActions {
     private final Logger logger = Logger.getLogger("EtlActions");
+    private Repository repository;
+    private File file;
 
-    public static void main(String[] args) throws InterruptedException, IOException {
-        EtlActions etlActions = new EtlActions();
-//        JFileChooser chooser = new JFileChooser("src/test/resources/testFiles");
-//        FileNameExtensionFilter filter = new FileNameExtensionFilter("Repo files", "json", "xml", "txt", "csv");
-//        chooser.setFileFilter(filter);
-//        int retval = chooser.showOpenDialog(null);
-//        if (retval == JFileChooser.APPROVE_OPTION) {
-//            System.out.println("You chose to open this file: " +
-//                    chooser.getSelectedFile().getName());
-//            File file = chooser.getSelectedFile();
-//    }
-            File fileCsv = new File("src/test/resources/testFiles" + "/persons.csv");
-            Repository repository = new Repository("Repo4", Vendor.JSON, "Repo4_JSON");
-
-            Vendor inputVendor = Vendor.CSV;
-
-            etlActions.extract(inputVendor, fileCsv, repository);
+    public EtlActions(Repository repository) {
+        this.repository = repository;
+        this.file = getFile();
     }
 
-    public void connectToDb(){
-        logger.log(Level.INFO, "connectToDb");
+    public EtlActions(){}
+
+    protected File getFile() {
+        JFileChooser chooser = new JFileChooser("src/test/resources/testFiles");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Repo files", "json", "xml", "txt", "csv");
+        chooser.setFileFilter(filter);
+        int retval = chooser.showOpenDialog(null);
+        if (retval == JFileChooser.APPROVE_OPTION) {
+            logger.info("You chose to open this file: " +
+                    chooser.getSelectedFile().getName());
+            return chooser.getSelectedFile();
+        }
+        return null;
     }
 
-    public void extract(Vendor vendor, File data, Repository repository) throws IOException {
+    public void extract(Vendor vendor, File data) throws IOException {
         logger.log(Level.INFO, "extract");
 
         DataExtractStream output = new DataExtractStream();
@@ -75,7 +76,7 @@ public class EtlActions {
         }
 
         Table table = new Table(FilenameUtils.getBaseName(data.getName()), getColumns(output), repository);
-        transform(repository, output, table);
+        transform(output, table);
     }
 
     Set<String> getColumns(DataExtractStream data) {
@@ -94,7 +95,7 @@ public class EtlActions {
         return columnNames;
     }
 
-    private void transform(Repository repository, DataExtractStream data, Table table) {
+    private void transform(DataExtractStream data, Table table) {
         logger.log(Level.INFO, "transform");
         DataTransformStream output = new DataTransformStream();
         Transformer transformer;
@@ -115,18 +116,15 @@ public class EtlActions {
             case JSON -> {
                 transformer = new TransformerJson();
                 output = transformer.transform(data);
-                break;
             }
             case MYSQL -> {
                 transformer = new TransformerMysql();
                 output = transformer.transform(data);
             }
         }
-
-        load(repository, output, table);
     }
 
-    public void load(Repository repository, DataTransformStream data, Table table) {
+    public void load(DataTransformStream data, Table table) {
         logger.log(Level.INFO, "load");
         File file = new File(Constants.REPOSITORIES_PATH + repository.getLocation());
 
@@ -138,7 +136,5 @@ public class EtlActions {
         }
 
         RepositoryManager.registerRepositoryTable(repository, table, data);
-
     }
-
 }

@@ -1,6 +1,7 @@
 package etool.cdimc.repository;
 
 import etool.cdimc.Constants;
+import etool.cdimc.etl.EtlActions;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -15,6 +16,8 @@ import java.util.logging.Logger;
 public class RepositoryLoader extends JPanel {
     private final Logger logger = Constants.logger();
     private final Repository repository;
+    private final JButton getFileButton = new JButton("Load data from file");
+    private final JButton getDbButton = new JButton("Load data from db");
 
     public RepositoryLoader(Repository repository){
         this.repository = repository;
@@ -35,7 +38,8 @@ public class RepositoryLoader extends JPanel {
         sc.useDelimiter(";");
         JTextArea pane = new JTextArea();
         pane.setBackground(Constants.MENU_COLOR);
-        pane.setBounds(30, 30, 150, 600);
+        pane.setBounds(15, 20, 170, 465);
+        addLoadButtons();
         String element;
         while (sc.hasNext()){
             element = sc.next();
@@ -48,6 +52,15 @@ public class RepositoryLoader extends JPanel {
         }
         sc.close();
         add(pane);
+    }
+
+    private void addLoadButtons() {
+        getFileButton.setBounds(25, 500, 150, 25);
+        getFileButton.addActionListener(e -> new EtlActions(repository));
+        getDbButton.setBounds(25, 530, 150, 25);
+
+        add(getFileButton);
+        add(getDbButton);
     }
 
     private void loadData() {

@@ -1,5 +1,6 @@
 package etool.cdimc.etl;
 
+import etool.cdimc.repository.Repository;
 import etool.cdimc.stream.DataExtractStream;
 import org.assertj.core.api.Assertions;
 import org.json.JSONObject;
