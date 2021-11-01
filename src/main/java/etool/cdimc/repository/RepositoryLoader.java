@@ -29,7 +29,7 @@ public class RepositoryLoader extends JPanel {
     }
 
     private void loadTables() throws FileNotFoundException {
-        File file = new File(Constants.REPOSITORIES_PATH + repository.getLocation() + "/tables.txt");
+        File file = new File(Constants.REPOSITORIES_PATH + repository.getLocation() + "/tables.etl");
         logger.info("Find: " + (file.getParentFile().listFiles().length - 1) + " tables.");
         Scanner sc = new Scanner(file);
         sc.useDelimiter(";");

@@ -18,6 +18,7 @@ public class OracleSQLConnector implements SQLConnector {
             DriverManager.getConnection(url, user, password);
             return true;
         } catch (SQLException | ClassNotFoundException throwables) {
+            logger.warning("ERROR: Can't connect!");
             throwables.printStackTrace();
         }
         return false;

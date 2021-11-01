@@ -19,13 +19,10 @@ public class PostgreSQLConnector implements SQLConnector {
             DriverManager.getConnection(url, user, password);
             return true;
         } catch (SQLException | ClassNotFoundException throwables) {
+            logger.warning("ERROR: Can't connect!");
             throwables.printStackTrace();
         }
         return false;
-    }
-
-    public Class getParser() {
-        return PsqlParser.class;
     }
 
 }

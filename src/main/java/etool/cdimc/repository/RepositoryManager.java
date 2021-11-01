@@ -80,10 +80,7 @@ public class RepositoryManager extends JPanel {
 
         JTextField repositoryName = new JTextField();
         repositoryName.setBounds(42, 20, 100, 30);
-        JComboBox vendorBox = new JComboBox();
-        for(Vendor v: Vendor.values()){
-            vendorBox.addItem(v.name());
-        }
+        JComboBox<Vendor> vendorBox = new JComboBox<>(Vendor.values());
         vendorBox.setBounds(42, 70, 100, 30);
 
         JButton connect = new JButton("Connect");
@@ -198,7 +195,7 @@ public class RepositoryManager extends JPanel {
     }
 
     public static void registerRepositoryTable(Repository repository, Table table, DataTransformStream data) {
-        try(FileWriter fw = new FileWriter(Constants.REPOSITORIES_PATH + repository.getLocation() + "/tables.txt", true);
+        try(FileWriter fw = new FileWriter(Constants.REPOSITORIES_PATH + repository.getLocation() + "/tables.etl", true);
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter out = new PrintWriter(bw)) {
             out.println(table.getTableWriter());

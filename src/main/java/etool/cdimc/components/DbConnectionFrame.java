@@ -15,10 +15,6 @@ public class DbConnectionFrame extends JFrame {
     private JTextField password;
     private DbConnectors connector;
 
-    public static void main(String[] args) {
-        DbConnectionFrame db = new DbConnectionFrame();
-    }
-
     public DbConnectionFrame() {
         setTitle("DB connect");
         setSize(270, 370);
