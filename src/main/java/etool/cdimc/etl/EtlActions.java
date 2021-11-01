@@ -1,12 +1,10 @@
 package etool.cdimc.etl;
 
 import etool.cdimc.Constants;
-import etool.cdimc.connectors.PostgreSQLConnector;
 import etool.cdimc.db.DbFile;
 import etool.cdimc.etl.extractors.*;
 import etool.cdimc.etl.transformers.*;
 import etool.cdimc.models.Table;
-import etool.cdimc.parser.PsqlParser;
 import etool.cdimc.repository.Repository;
 import etool.cdimc.repository.RepositoryManager;
 import etool.cdimc.repository.Vendor;
