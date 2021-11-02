@@ -20,6 +20,7 @@ public class DataExtractStream {
 
     public void filter(Set<String> columns) {
         this.dataColumnStream = dataColumnStream.getFilteredDataStream(columns);
+        System.out.println(dataColumnStream);
     }
 
     public String toDataString() {
