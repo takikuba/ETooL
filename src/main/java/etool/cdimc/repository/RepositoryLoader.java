@@ -1,6 +1,7 @@
 package etool.cdimc.repository;
 
 import etool.cdimc.Constants;
+import etool.cdimc.components.FileTransformFrame;
 import etool.cdimc.etl.EtlActions;
 
 import javax.swing.*;
@@ -56,7 +57,7 @@ public class RepositoryLoader extends JPanel {
 
     private void addLoadButtons() {
         getFileButton.setBounds(25, 500, 150, 25);
-        getFileButton.addActionListener(e -> new EtlActions(repository));
+        getFileButton.addActionListener(e -> new FileTransformFrame(new EtlActions(repository)));
         getDbButton.setBounds(25, 530, 150, 25);
 
         add(getFileButton);

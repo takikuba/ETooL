@@ -23,24 +23,20 @@ public class ExtractorXml implements Extractor {
     public DataExtractStream extract(File data) {
         logger.info("Run!");
 
-        TransformerFactory tf = TransformerFactory.newInstance();
         try {
+            TransformerFactory tf = TransformerFactory.newInstance();
             Transformer transformer = tf.newTransformer();
             StringWriter writer = new StringWriter();
 
             DocumentBuilderFactory dbf
                     = DocumentBuilderFactory.newInstance();
-
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(data);
 
             transformer.transform(new DOMSource(doc), new StreamResult(writer));
-
-
             JSONObject json = XML.toJSONObject(writer.toString());
 
-            return new DataExtractStream(json);
-
+            return new DataExtractStream(json.toString());
         } catch (ParserConfigurationException | TransformerException | SAXException | IOException e) {
             logger.warning("ERROR when extract file!");
             e.printStackTrace();

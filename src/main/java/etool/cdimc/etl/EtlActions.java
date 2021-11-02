@@ -16,8 +16,6 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -28,6 +26,10 @@ public class EtlActions {
     private final Logger logger = Logger.getLogger("EtlActions");
     private Repository repository;
     private File file;
+    private Table table;
+    private boolean valid = false;
+    private DataExtractStream dataExtractStream = new DataExtractStream();
+    private DataTransformStream dataTransformStream = new DataTransformStream();
 
     public EtlActions(Repository repository) {
         this.repository = repository;
@@ -35,6 +37,10 @@ public class EtlActions {
     }
 
     public EtlActions(){}
+
+    public boolean isValid() {
+        return valid;
+    }
 
     protected File getFile() {
         JFileChooser chooser = new JFileChooser("src/test/resources/testFiles");
@@ -44,46 +50,50 @@ public class EtlActions {
         if (retval == JFileChooser.APPROVE_OPTION) {
             logger.info("You chose to open this file: " +
                     chooser.getSelectedFile().getName());
+            valid = true;
             return chooser.getSelectedFile();
         }
+        valid = false;
         return null;
     }
 
-    public void extract(Vendor vendor, File data) throws IOException {
+    public void extract() throws IOException {
         logger.log(Level.INFO, "extract");
 
-        DataExtractStream output = new DataExtractStream();
+        Vendor vendor = Vendor.valueOf(FilenameUtils.getExtension(file.getName()).toUpperCase());
         Extractor extractor;
 
         switch (vendor) {
             case XML -> {
                 extractor = new ExtractorXml();
-                output = extractor.extract(data);
+                dataExtractStream = extractor.extract(file);
             }
             case CSV -> {
                 extractor = new ExtractorCsv();
-                output = extractor.extract(data);
+                dataExtractStream = extractor.extract(file);
             }
             case TXT -> {
                 extractor = new ExtractorTxt();
-                output = extractor.extract(data);
+                dataExtractStream = extractor.extract(file);
             }
             case JSON -> {
                 extractor = new ExtractorJson();
-                output = extractor.extract(data);
+                dataExtractStream = extractor.extract(file);
             }
             case MYSQL -> {
                 extractor = new ExtractorMysql();
-                output = extractor.extract(data);
+                dataExtractStream = extractor.extract(file);
             }
         }
 
-        Table table = new Table(FilenameUtils.getBaseName(data.getName()), getColumns(output), repository);
+        table = new Table(FilenameUtils.getBaseName(file.getName()), getColumns(), repository);
         DbFile.cleanRepository(repository);
-        transform(output, table);
     }
 
-    Set<String> getColumns(DataExtractStream data) {
+    public Set<String> getColumns() {
+        return getColumns(dataExtractStream);
+    }
+    public Set<String> getColumns(DataExtractStream data) {
 
         String jsonArray = data.getData().toString().substring(data.getData().toString().indexOf('[')+1, data.getData().toString().indexOf(']'));
         String[] rows = jsonArray.split("},\\{");
@@ -99,37 +109,41 @@ public class EtlActions {
         return columnNames;
     }
 
-    private void transform(DataExtractStream data, Table table) {
+    public void filter(Set<String> selectedColumns) {
+        table.setColumns(selectedColumns);
+        dataExtractStream.filter(selectedColumns);
+        transform();
+        load();
+    }
+    private void transform() {
         logger.log(Level.INFO, "transform");
-        DataTransformStream output = new DataTransformStream();
         Transformer transformer;
 
         switch (repository.getVendor()) {
             case XML -> {
                 transformer = new TransformerXml();
-                output = transformer.transform(data);
+                dataTransformStream = transformer.transform(dataExtractStream);
             }
             case CSV -> {
                 transformer = new TransformerCsv();
-                output = transformer.transform(data);
+                dataTransformStream = transformer.transform(dataExtractStream);
             }
             case TXT -> {
                 transformer = new TransformerTxt();
-                output = transformer.transform(data);
+                dataTransformStream = transformer.transform(dataExtractStream);
             }
             case JSON -> {
                 transformer = new TransformerJson();
-                output = transformer.transform(data);
+                dataTransformStream = transformer.transform(dataExtractStream);
             }
             case MYSQL -> {
                 transformer = new TransformerMysql();
-                output = transformer.transform(data);
+                dataTransformStream = transformer.transform(dataExtractStream);
             }
         }
-
     }
 
-    public void load(DataTransformStream data, Table table) {
+    public void load() {
         logger.log(Level.INFO, "load");
         File file = new File(Constants.REPOSITORIES_PATH + repository.getLocation());
 
@@ -140,8 +154,14 @@ public class EtlActions {
             }
         }
 
-        RepositoryManager.registerRepositoryTable(repository, table, data);
-
+        RepositoryManager.registerRepositoryTable(repository, table, dataTransformStream);
     }
 
+    public Table getTable() {
+        return table;
+    }
+
+    public void setTable(Table table) {
+        this.table = table;
+    }
 }

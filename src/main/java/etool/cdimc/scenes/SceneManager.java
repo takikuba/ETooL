@@ -86,7 +86,7 @@ public class SceneManager {
 
     @Override
     public String toString() {
-        return "game.SceneManager{" +
+        return "SceneManager{" +
                 "jFrame=" + currentScene +
                 '}';
     }

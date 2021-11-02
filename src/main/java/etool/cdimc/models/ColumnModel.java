@@ -7,7 +7,6 @@ import java.util.List;
 
 public class ColumnModel {
     static final private int NUMMARK = 10;
-    static final private char CRETURN = '\r';
     static final private char LFEED = '\n';
     static final private char COMMENT = '#';
 

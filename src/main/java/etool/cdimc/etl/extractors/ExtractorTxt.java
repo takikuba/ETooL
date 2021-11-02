@@ -41,7 +41,6 @@ public class ExtractorTxt implements Extractor {
             String output = mapper.writeValueAsString(list);
 
             output = "{ \"" + FilenameUtils.getBaseName(data.getName()) + "\":" + output + "}";
-            System.out.println(output);
             return new DataExtractStream(output);
         } catch (IOException e) {
             e.printStackTrace();

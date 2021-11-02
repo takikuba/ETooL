@@ -44,7 +44,9 @@ public class DataColumnStream {
     }
 
     public void addColumn(String column, String value) {
-        columnDataMap.put(column, new ArrayList<>());
+        if(!columnDataMap.containsKey(column)){
+            columnDataMap.put(column, new ArrayList<>());
+        }
         addColumnValue(column,value);
     }
 
@@ -70,14 +72,15 @@ public class DataColumnStream {
     }
 
     public DataColumnStream getFilteredDataStream(Set<String> columns) {
+        logger.info("Filtering data!");
         DataColumnStream dcs = new DataColumnStream(this.name);
-        columns.forEach(col -> {
+        for (String col : columns) {
             if (columnDataMap.containsKey(col)) {
                 dcs.addColumn(col, columnDataMap.get(col));
             } else {
                 logger.warning("Column " + col + " don't exist! Will not be filtered!");
             }
-        });
+        }
         return dcs;
     }
 

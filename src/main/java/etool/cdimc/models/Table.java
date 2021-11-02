@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public class Table {
     private final String orgName;
     private String name;
-    private final Set<String> columns;
+    private Set<String> columns;
     private final Vendor vendor;
     private static int index = 1;
 
@@ -25,6 +25,10 @@ public class Table {
         return this;
     }
 
+    public String getOrgName() {
+        return orgName;
+    }
+
     public String getName() {
         return name;
     }
@@ -36,5 +40,13 @@ public class Table {
     public String getTableWriter() {
         Set<String> newColumns = columns.stream().map(str -> ";column." + str).collect(Collectors.toSet());
         return name + String.join("", newColumns) + ';';
+    }
+
+    public Set<String> getColumns() {
+        return columns;
+    }
+
+    public void setColumns(Set<String> columns) {
+        this.columns = columns;
     }
 }
