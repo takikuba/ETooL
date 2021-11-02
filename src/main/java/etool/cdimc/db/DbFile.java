@@ -29,18 +29,18 @@ public class DbFile {
             }
             out +=  "\n";
         }
-        BufferedWriter writer = new BufferedWriter(new FileWriter(Constants.REPOSITORIES_PATH + repo.getLocation() + "/" + data.getName() + ".tmp"));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(Constants.REPOSITORIES_PATH + repo.getLocation() + "/" + data.getName() + ".mysql"));
         writer.write(out);
 
         writer.close();
-        return new File(Constants.REPOSITORIES_PATH + repo.getLocation() + "/" + data.getName() + ".tmp");
+        return new File(Constants.REPOSITORIES_PATH + repo.getLocation() + "/" + data.getName() + ".mysql");
     }
 
     public static void cleanRepository(Repository repo) {
         File file = new File(Constants.REPOSITORIES_PATH + repo.getLocation());
         File[] files = file.listFiles();
         for(File f: files) {
-            if(f.getName().endsWith("tmp")) {
+            if(f.getName().endsWith("mysql")) {
                 if(f.delete()){
                     Constants.logger().info(f.getName() + " file deleted successfully!");
                 } else {

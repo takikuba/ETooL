@@ -4,6 +4,7 @@ import etool.cdimc.Constants;
 import etool.cdimc.connectors.DbConnectors;
 
 import javax.swing.*;
+import java.sql.SQLException;
 
 public class DbConnectionFrame extends JFrame {
 
@@ -14,8 +15,10 @@ public class DbConnectionFrame extends JFrame {
     private JTextField user;
     private JTextField password;
     private DbConnectors connector;
+    private final DbTransformFrame parent;
 
-    public DbConnectionFrame() {
+    public DbConnectionFrame(DbTransformFrame parent) {
+        this.parent = parent;
         setTitle("DB connect");
         setSize(270, 370);
         setLocationRelativeTo(null);
@@ -51,7 +54,13 @@ public class DbConnectionFrame extends JFrame {
         });
 
         testConnection.addActionListener( e -> testConnection(connector));
-        connect.addActionListener(c -> connect(connector));
+        connect.addActionListener(c -> {
+            try {
+                connect(connector);
+            } catch (SQLException | ClassNotFoundException throwables) {
+                throwables.printStackTrace();
+            }
+        });
 
 
         box.setBounds(130, 50, 110, 30);
@@ -81,15 +90,20 @@ public class DbConnectionFrame extends JFrame {
         password.setText(db.getPassword());
     }
 
-    private void connect(DbConnectors db) {
-        testConnection(db);
+    private void connect(DbConnectors db) throws SQLException, ClassNotFoundException {
+        if(testConnection(db)) {
+            parent.setFile(db.getParser().setConnection(db.getConnector().connect(url.getText(), user.getText(), password.getText())));
+            this.dispose();
+        }
     }
 
-    private void testConnection(DbConnectors db) {
+    private boolean testConnection(DbConnectors db) {
         if(db.getConnector().testConnection(url.getText(), user.getText(), password.getText())){
             JOptionPane.showMessageDialog(null, "Connection successful!");
+            return true;
         } else {
             JOptionPane.showMessageDialog(null, "Connection failed!");
+            return false;
         }
     }
 

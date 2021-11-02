@@ -8,9 +8,9 @@ import java.sql.*;
 import java.util.*;
 import java.util.logging.Logger;
 
-public class PsqlParser {
+public class PsqlParser implements Parser {
 
-    private static Logger logger = Constants.logger();
+    private final Logger logger = Constants.logger();
 
     public static Set<String> SCHEMAS_BLACKLIST = Set.of("pg_toast", "pg_catalog", "information_schema");
 
@@ -20,6 +20,8 @@ public class PsqlParser {
     private RelationalModel.Table table;
     private Set<RelationalModel.Column> columns;
     private Set<String> columnsNames;
+
+    public PsqlParser() {}
 
     public PsqlParser(Connection connection) throws SQLException {
         this.connection = connection;
@@ -31,6 +33,10 @@ public class PsqlParser {
         columns = Set.of(table.getOrCreateColumn("name"), table.getOrCreateColumn("album"));
         getTables();
         getColumns();
+    }
+
+    public PsqlParser setConnection(Connection connection) throws SQLException {
+        return new PsqlParser(connection);
     }
 
     public DataColumnStream getOutput() throws SQLException {

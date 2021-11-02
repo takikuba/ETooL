@@ -7,20 +7,26 @@ import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 
 public class FileTransformFrame extends JFrame {
 
     private final EtlActions etlActions;
     private final Set<JCheckBox> loadingColumns = new HashSet<>();
     private final JButton loadButton = new JButton("Load");
+    private final Logger logger = Constants.logger();
+    private boolean valid = false;
 
     public FileTransformFrame(EtlActions etlActions) {
         this.etlActions = etlActions;
+        this.etlActions.setFile(getFile());
 
-        if(etlActions.isValid()){
+        if(valid){
             setTitle("FileTransform");
             setSize(200, 200);
             setLocationRelativeTo(null);
@@ -32,6 +38,21 @@ public class FileTransformFrame extends JFrame {
             startEtl();
             addPanel();
         }
+    }
+
+    private File getFile() {
+        JFileChooser chooser = new JFileChooser("src/test/resources/testFiles");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Repo files", "json", "xml", "txt", "csv");
+        chooser.setFileFilter(filter);
+        int retval = chooser.showOpenDialog(null);
+        if (retval == JFileChooser.APPROVE_OPTION) {
+            logger.info("You chose to open this file: " +
+                    chooser.getSelectedFile().getName());
+            valid = true;
+            return chooser.getSelectedFile();
+        }
+        valid = false;
+        return null;
     }
 
     private void startEtl() {

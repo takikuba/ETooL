@@ -27,34 +27,17 @@ public class EtlActions {
     private Repository repository;
     private File file;
     private Table table;
-    private boolean valid = false;
     private DataExtractStream dataExtractStream = new DataExtractStream();
     private DataTransformStream dataTransformStream = new DataTransformStream();
 
     public EtlActions(Repository repository) {
         this.repository = repository;
-        this.file = getFile();
     }
 
     public EtlActions(){}
 
-    public boolean isValid() {
-        return valid;
-    }
-
-    protected File getFile() {
-        JFileChooser chooser = new JFileChooser("src/test/resources/testFiles");
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Repo files", "json", "xml", "txt", "csv");
-        chooser.setFileFilter(filter);
-        int retval = chooser.showOpenDialog(null);
-        if (retval == JFileChooser.APPROVE_OPTION) {
-            logger.info("You chose to open this file: " +
-                    chooser.getSelectedFile().getName());
-            valid = true;
-            return chooser.getSelectedFile();
-        }
-        valid = false;
-        return null;
+    public void setFile(File file) {
+        this.file = file;
     }
 
     public void extract() throws IOException {
@@ -163,5 +146,9 @@ public class EtlActions {
 
     public void setTable(Table table) {
         this.table = table;
+    }
+
+    public Repository getRepository() {
+        return repository;
     }
 }
