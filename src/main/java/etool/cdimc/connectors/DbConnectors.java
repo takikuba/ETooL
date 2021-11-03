@@ -9,7 +9,7 @@ import javax.swing.*;
 
 public enum DbConnectors {
 
-    POSTGRESQL("PostgreSQL", "jdbc:postgresql://host:port/database", "user", "password", new ImageIcon(Constants.CONNECTORS_ICON + "postgresql.png"), new PostgreSQLConnector(), new PsqlParser()),
+    POSTGRESQL("PostgreSQL", "jdbc:postgresql://localhost/etlTEST", "admin2", "admin", new ImageIcon(Constants.CONNECTORS_ICON + "postgresql.png"), new PostgreSQLConnector(), new PsqlParser()), //TODO back changes after tests
     ORACLE("Oracle", "jdbc:oracle:thin:@host:port/service", "user", "password", new ImageIcon(Constants.CONNECTORS_ICON + "oracle.jpg"), new OracleSQLConnector(), new OracleParser());
 
     private final String name;

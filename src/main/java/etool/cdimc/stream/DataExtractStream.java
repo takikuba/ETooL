@@ -23,6 +23,10 @@ public class DataExtractStream {
         System.out.println(dataColumnStream);
     }
 
+    public Set<String> getColumns() {
+        return dataColumnStream.getColumns();
+    }
+
     public String toDataString() {
         return dataColumnStream.toString();
     }

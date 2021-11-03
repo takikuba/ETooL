@@ -42,13 +42,57 @@ public class DbTransformFrame extends JFrame {
         setResizable(false);
         setVisible(true);
         try {
+            extractFromDB(parser);
             File file = DbFile.getDbFile(parser.getOutput(), etlActions.getRepository());
             this.etlActions.setFile(file);
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
         startEtl();
-        addPanel();
+//        addPanel();
+    }
+
+    private void extractFromDB(Parser parser) {
+        JPanel panel = new JPanel();
+        panel.setBounds( 0, 0, 184, 161);
+        panel.setBackground(Constants.MENU_COLOR);
+        panel.setBorder(new CompoundBorder(new TitledBorder("Choose schema:"), new EmptyBorder(8, 0, 0, 0)));
+        for(String schema: parser.getSchemas()){
+            JButton sB = new JButton(schema);
+            sB.setBackground(Constants.WORKSPACE_COLOR);
+            sB.addActionListener( e -> {
+                JPanel panel2 = new JPanel();
+                panel2.setBounds( 0, 0, 184, 161);
+                panel2.setBackground(Constants.MENU_COLOR);
+                panel2.setBorder(new CompoundBorder(new TitledBorder("Choose table: " + sB.getText()), new EmptyBorder(8, 0, 0, 0)));
+                for(String table: parser.getTables(schema)) {
+                    JButton st = new JButton(table);
+                    st.setBackground(Constants.WORKSPACE_COLOR);
+                    st.addActionListener( f -> {
+                        panel2.removeAll();
+                        panel2.setBorder(new CompoundBorder(new TitledBorder("Columns in table: " + table), new EmptyBorder(8, 0, 0, 0)));
+                        for(String column: parser.getColumns(table)){
+                            System.out.println(column);
+                            JButton sc = new JButton(column);
+                            sc.setBackground(Constants.WORKSPACE_COLOR);
+                            sc.addActionListener( c -> {
+
+                            });
+                            panel2.add(sc);
+                            repaint();
+                            revalidate();
+                            }
+                    });
+                    panel2.add(st);
+                }
+                getContentPane().remove(panel);
+                getContentPane().add(panel2);
+                repaint();
+                revalidate();
+            });
+            panel.add(sB);
+        }
+        this.getContentPane().add(panel);
     }
 
     private void startEtl() {

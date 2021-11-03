@@ -8,6 +8,7 @@ import etool.cdimc.models.Table;
 import etool.cdimc.repository.Repository;
 import etool.cdimc.repository.RepositoryManager;
 import etool.cdimc.repository.Vendor;
+import etool.cdimc.stream.DataColumnStream;
 import etool.cdimc.stream.DataExtractStream;
 import etool.cdimc.stream.DataTransformStream;
 import org.apache.commons.io.FilenameUtils;
@@ -77,19 +78,10 @@ public class EtlActions {
         return getColumns(dataExtractStream);
     }
     public Set<String> getColumns(DataExtractStream data) {
+        Set<String> columns = data.getColumns();
+        logger.info("Extract following columns from source: " + columns);
 
-        String jsonArray = data.getData().toString().substring(data.getData().toString().indexOf('[')+1, data.getData().toString().indexOf(']'));
-        String[] rows = jsonArray.split("},\\{");
-        String[] columns = rows[0].split(",");
-
-        Set<String> columnNames = new HashSet<>();
-        for(String col: columns) {
-            columnNames.add(col.substring(col.indexOf("\"")+1, col.indexOf("\":")));
-        }
-
-        logger.info("Extract following columns from source: " + columnNames);
-
-        return columnNames;
+        return columns;
     }
 
     public void filter(Set<String> selectedColumns) {
