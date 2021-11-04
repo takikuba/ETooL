@@ -9,3 +9,9 @@ e.g. .txt, .xml, .csv, .json, as well as databases e.g. oracle database, postgre
 
 To keep up to date on the issues I'm working on, feel free to take a look [Trello](https://trello.com/b/JbveP8fi/etool).
 
+Currently, the application is reading data from types: txt, csv, json, xml and from postgresql database and loading it into json format repository.
+
+We run the application using the AppRunner class.
+
+![img.png](READMEfiles/img.png)
+Above you can see the main application window.
