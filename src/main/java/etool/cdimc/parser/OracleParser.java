@@ -33,7 +33,6 @@ public class OracleParser implements Parser {
     }
 
     @Override
-    public DataColumnStream getColumnValues(Set<String> columns) {
-        return null;
+    public void getColumnValues(Set<String> columns) {
     }
 }

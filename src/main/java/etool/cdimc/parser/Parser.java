@@ -12,5 +12,5 @@ public interface Parser {
     Set<String> getSchemas();
     Set<String> getTables(String schema);
     Set<String> getColumns(String table);
-    DataColumnStream getColumnValues(Set<String> columns);
+    void getColumnValues(Set<String> columns);
 }

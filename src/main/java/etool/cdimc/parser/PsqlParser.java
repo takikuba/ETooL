@@ -123,7 +123,7 @@ public class PsqlParser implements Parser {
         return table.getChildren();
     }
 
-    public DataColumnStream getColumnValues(Set<String> columns) {
+    public void getColumnValues(Set<String> columns) {
         try {
             this.columns = new HashSet<>();
             columns.forEach( col -> {
@@ -133,11 +133,10 @@ public class PsqlParser implements Parser {
                             logger.warning(col + " can't be process!");
                         }
                     });
-            return getColumnValues();
+            getColumnValues();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
     }
 
     private DataColumnStream getColumnValues() throws SQLException {

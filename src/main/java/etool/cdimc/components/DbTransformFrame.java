@@ -49,7 +49,6 @@ public class DbTransformFrame extends JFrame {
             e.printStackTrace();
         }
         startEtl();
-//        addPanel();
     }
 
     private void extractFromDB(Parser parser) {
@@ -73,15 +72,20 @@ public class DbTransformFrame extends JFrame {
                         panel2.setBorder(new CompoundBorder(new TitledBorder("Columns in table: " + table), new EmptyBorder(8, 0, 0, 0)));
                         for(String column: parser.getColumns(table)){
                             System.out.println(column);
-                            JButton sc = new JButton(column);
+                            JCheckBox sc = new JCheckBox(column);
                             sc.setBackground(Constants.WORKSPACE_COLOR);
-                            sc.addActionListener( c -> {
-
-                            });
+                            loadingColumns.add(sc);
                             panel2.add(sc);
                             repaint();
                             revalidate();
                             }
+                        loadButton.setBounds(30, 135, 120, 20);
+                        loadButton.setBackground(Constants.WORKSPACE_COLOR);
+                        loadButton.addActionListener( k -> {
+                            etlActions.filter(getSelectedColumns());
+                            this.dispose();
+                        });
+                        panel2.add(loadButton);
                     });
                     panel2.add(st);
                 }
@@ -103,24 +107,6 @@ public class DbTransformFrame extends JFrame {
         }
     }
 
-    private void addPanel() {
-        JPanel panel = new JPanel();
-        panel.setBackground(Constants.MENU_COLOR);
-        panel.setLayout(null);
-        panel.setBounds(0, 0, 200, 200);
-
-        loadButton.setBounds(30, 135, 120, 20);
-        loadButton.setBackground(Constants.WORKSPACE_COLOR);
-        loadButton.addActionListener( e -> {
-            etlActions.filter(getSelectedColumns());
-            this.dispose();
-        });
-
-        addColumnChecker(panel);
-        panel.add(loadButton);
-        add(panel);
-    }
-
     private Set<String> getSelectedColumns() {
         Set<String> retval = new HashSet<>();
         for(JCheckBox box: loadingColumns) {
@@ -129,25 +115,8 @@ public class DbTransformFrame extends JFrame {
             }
         }
         if(retval.isEmpty()){
-            new FileTransformFrame(etlActions);
+            new DbTransformFrame(etlActions);
         }
         return retval;
     }
-
-    private void addColumnChecker(JPanel parent) {
-        JPanel panel = new JPanel();
-        panel.setBorder(new CompoundBorder(new TitledBorder("Extracted columns: "), new EmptyBorder(8, 0, 0, 0)));
-        panel.setBackground(Constants.WORKSPACE_COLOR);
-        panel.setBounds(10, 7, 165, 125);
-
-        Set<String> extractedColumns = etlActions.getColumns();
-        for(String col: extractedColumns) {
-            JCheckBox cb = new JCheckBox(col);
-            cb.setBackground(Constants.WORKSPACE_COLOR);
-            loadingColumns.add(cb);
-            panel.add(cb);
-        }
-        parent.add(panel);
-    }
-
 }
