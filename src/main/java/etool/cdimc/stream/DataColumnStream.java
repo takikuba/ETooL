@@ -1,7 +1,9 @@
 package etool.cdimc.stream;
 
 import etool.cdimc.Constants;
+import etool.cdimc.db.DbFile;
 
+import java.io.StringWriter;
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -10,11 +12,17 @@ import java.util.stream.Stream;
 public class DataColumnStream {
 
     private Logger logger = Constants.logger();
-    private HashMap<String, ArrayList<String>> columnDataMap = new HashMap<>();
-    private final String name;
+    private final HashMap<String, ArrayList<String>> columnDataMap = new HashMap<>();
+    private String name;
     private String exampleColumn;
 
+    public DataColumnStream(){};
+
     public DataColumnStream(String name){
+        this.name = name;
+    }
+
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -47,16 +55,19 @@ public class DataColumnStream {
         if(!columnDataMap.containsKey(column)){
             columnDataMap.put(column, new ArrayList<>());
         }
+        this.exampleColumn = column;
         addColumnValue(column,value);
     }
 
     public void addColumn(String column, ArrayList<String> values) {
         columnDataMap.put(column, new ArrayList<>());
+        this.exampleColumn = column;
         addColumnValues(column, values);
     }
 
     public void addColumnValue(String column, String value) {
         columnDataMap.get(column).add(value);
+        this.exampleColumn = column;
     }
 
     public void addColumnValues(String column, ArrayList<String> values) {
@@ -81,7 +92,19 @@ public class DataColumnStream {
                 logger.warning("Column " + col + " don't exist! Will not be filtered!");
             }
         }
+        System.out.println(dcs.getWriter());
         return dcs;
+    }
+
+    public String getWriter() {
+        return DbFile.getOutputFormat(this);
+    }
+
+    private void newColumn(String column) {
+        this.exampleColumn = column;
+        if(!columnDataMap.containsKey(column)){
+            columnDataMap.put(column, new ArrayList<>());
+        }
     }
 
     @Override

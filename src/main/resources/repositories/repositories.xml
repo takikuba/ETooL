@@ -2,27 +2,18 @@
 <repositories>
     <repository>
         <name>Repo4</name>
-        <vendor>JSON</vendor>
         <location>Repo4_JSON</location>
     </repository>
     <repository>
-        <name>Repo5</name>
-        <vendor>CSV</vendor>
-        <location>Repo5_CSV</location>
-    </repository>
-    <repository>
         <name>Repo3</name>
-        <vendor>XML</vendor>
         <location>Repo3_XML</location>
     </repository>
     <repository>
         <name>Repo2</name>
-        <vendor>CSV</vendor>
         <location>Repo2_CSV</location>
     </repository>
     <repository>
         <name>Repo1</name>
-        <vendor>TXT</vendor>
         <location>Repo1_TXT</location>
     </repository>
 </repositories>

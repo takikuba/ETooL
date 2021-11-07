@@ -71,7 +71,6 @@ public class DbTransformFrame extends JFrame {
                         panel2.removeAll();
                         panel2.setBorder(new CompoundBorder(new TitledBorder("Columns in table: " + table), new EmptyBorder(8, 0, 0, 0)));
                         for(String column: parser.getColumns(table)){
-                            System.out.println(column);
                             JCheckBox sc = new JCheckBox(column);
                             sc.setBackground(Constants.WORKSPACE_COLOR);
                             loadingColumns.add(sc);

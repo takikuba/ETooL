@@ -11,6 +11,7 @@ import etool.cdimc.repository.Vendor;
 import etool.cdimc.stream.DataColumnStream;
 import etool.cdimc.stream.DataExtractStream;
 import etool.cdimc.stream.DataTransformStream;
+import etool.cdimc.stream.StreamTransformer;
 import org.apache.commons.io.FilenameUtils;
 
 import javax.swing.*;
@@ -29,7 +30,7 @@ public class EtlActions {
     private File file;
     private Table table;
     private DataExtractStream dataExtractStream = new DataExtractStream();
-    private DataTransformStream dataTransformStream = new DataTransformStream();
+    private DataColumnStream dcs;
 
     public EtlActions(Repository repository) {
         this.repository = repository;
@@ -70,7 +71,7 @@ public class EtlActions {
             }
         }
 
-        table = new Table(FilenameUtils.getBaseName(file.getName()), getColumns(), repository);
+        table = new Table(FilenameUtils.getBaseName(file.getName()), getColumns());
         DbFile.cleanRepository(repository);
     }
 
@@ -78,44 +79,30 @@ public class EtlActions {
         return getColumns(dataExtractStream);
     }
     public Set<String> getColumns(DataExtractStream data) {
-        Set<String> columns = data.getColumns();
-        logger.info("Extract following columns from source: " + columns);
+        String jsonArray = data.getData().toString().substring(data.getData().toString().indexOf('[')+1, data.getData().toString().indexOf(']'));
+        String[] rows = jsonArray.split("},\\{");
+        String[] columns = rows[0].split(",");
 
-        return columns;
+        Set<String> columnNames = new HashSet<>();
+        for(String col: columns) {
+            columnNames.add(col.substring(col.indexOf("\"")+1, col.indexOf("\":")));
+        }
+        logger.info("Extract following columns from source: " + columnNames);
+
+        return columnNames;
     }
 
     public void filter(Set<String> selectedColumns) {
+        System.out.println(dcs);
         table.setColumns(selectedColumns);
-        dataExtractStream.filter(selectedColumns);
         transform();
+        dcs = dcs.getFilteredDataStream(selectedColumns);
         load();
     }
     private void transform() {
         logger.log(Level.INFO, "transform");
-        Transformer transformer;
-
-        switch (repository.getVendor()) {
-            case XML -> {
-                transformer = new TransformerXml();
-                dataTransformStream = transformer.transform(dataExtractStream);
-            }
-            case CSV -> {
-                transformer = new TransformerCsv();
-                dataTransformStream = transformer.transform(dataExtractStream);
-            }
-            case TXT -> {
-                transformer = new TransformerTxt();
-                dataTransformStream = transformer.transform(dataExtractStream);
-            }
-            case JSON -> {
-                transformer = new TransformerJson();
-                dataTransformStream = transformer.transform(dataExtractStream);
-            }
-            case MYSQL -> {
-                transformer = new TransformerMysql();
-                dataTransformStream = transformer.transform(dataExtractStream);
-            }
-        }
+        dcs = StreamTransformer.transformJsonToDataStream(dataExtractStream.toString());
+        dcs.setName(repository.getName());
     }
 
     public void load() {
@@ -128,8 +115,7 @@ public class EtlActions {
                 table = table.changeName();
             }
         }
-
-        RepositoryManager.registerRepositoryTable(repository, table, dataTransformStream);
+        RepositoryManager.registerRepositoryTable(repository, table, dcs);
     }
 
     public Table getTable() {

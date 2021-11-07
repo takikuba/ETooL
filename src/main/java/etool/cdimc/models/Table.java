@@ -10,14 +10,12 @@ public class Table {
     private final String orgName;
     private String name;
     private Set<String> columns;
-    private final Vendor vendor;
     private static int index = 1;
 
-    public Table(String name, Set<String> columns, Repository repository){
+    public Table(String name, Set<String> columns){
         this.orgName = name;
         this.name = name;
         this.columns = columns;
-        this.vendor = repository.getVendor();
     }
 
     public Table changeName() {
@@ -34,7 +32,7 @@ public class Table {
     }
 
     public String getLocation() {
-        return name + "." + vendor.name().toLowerCase();
+        return name + "." + "cef";
     }
 
     public String getTableWriter() {

@@ -3,16 +3,11 @@ package etool.cdimc.db;
 import etool.cdimc.Constants;
 import etool.cdimc.repository.Repository;
 import etool.cdimc.stream.DataColumnStream;
-import etool.cdimc.stream.DataExtractStream;
-import etool.cdimc.stream.DataTransformStream;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class DbFile {
 
@@ -48,6 +43,23 @@ public class DbFile {
                 }
             }
         }
+    }
+
+    public static String getOutputFormat(DataColumnStream data) {
+        String out = "";
+        for(String col: data.getColumns()) {
+            out += "column." + col + "$";
+        }
+        out += "\n";
+
+        for(int i=0; i < data.getColumnValuesSize(); i++) {
+            for(String col: data.getColumns()) {
+                out += data.getIndexColumnValue(col, i) + "$";
+            }
+            out +=  "\n";
+        }
+
+        return out;
     }
 
 }

@@ -1,3 +1,0 @@
-column.mark;column.model
-Ford;Mondeo
-Fiat;125p

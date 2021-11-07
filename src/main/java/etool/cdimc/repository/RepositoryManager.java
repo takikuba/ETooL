@@ -1,8 +1,10 @@
 package etool.cdimc.repository;
 
 import etool.cdimc.Constants;
+import etool.cdimc.db.DbFile;
 import etool.cdimc.models.Table;
 import etool.cdimc.scenes.SceneManager;
+import etool.cdimc.stream.DataColumnStream;
 import etool.cdimc.stream.DataTransformStream;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -86,7 +88,7 @@ public class RepositoryManager extends JPanel {
         JButton connect = new JButton("Connect");
         connect.setBounds(42, 120, 100, 20);
         connect.addActionListener(e -> {
-            addRepository(repositoryName.getText(), Objects.requireNonNull(vendorBox.getSelectedItem()).toString());
+            addRepository(repositoryName.getText());
         });
 
         addRepositoryFrame.getContentPane().add(repositoryName);
@@ -95,14 +97,13 @@ public class RepositoryManager extends JPanel {
         addRepositoryFrame.setVisible(true);
     }
 
-    public boolean addRepository(String repositoryName, String vendor) {
+    public boolean addRepository(String repositoryName) {
         if(getRepositoriesNames().contains(repositoryName)) {
             JOptionPane.showMessageDialog(null, "Repository with this name already exist! \nChange name and then proceed.");
             logger.warning("Repository already exist!");
         } else {
             Repository repository = new Repository((repositoryName),
-                                            Vendor.valueOf(vendor),
-                                    (repositoryName) + "_" + vendor);
+                                    (repositoryName));
             repositories.add(repository);
             try {
                 registerRepository(repository);
@@ -178,7 +179,6 @@ public class RepositoryManager extends JPanel {
             repository.appendChild(name);
 
             vendor = doc.createElement("vendor");
-            vendor.setTextContent(repo.getVendor().name());
             repository.appendChild(vendor);
 
             location = doc.createElement("location");
@@ -194,7 +194,7 @@ public class RepositoryManager extends JPanel {
         addRepositoryHomeFolder(folderRepository);
     }
 
-    public static void registerRepositoryTable(Repository repository, Table table, DataTransformStream data) {
+    public static void registerRepositoryTable(Repository repository, Table table, DataColumnStream data) {
         try(FileWriter fw = new FileWriter(Constants.REPOSITORIES_PATH + repository.getLocation() + "/tables.etl", true);
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter out = new PrintWriter(bw)) {
@@ -205,11 +205,12 @@ public class RepositoryManager extends JPanel {
         }
     }
 
-    public static void loadRepositoryTable(Repository repository, Table table, DataTransformStream data) throws IOException {
+    public static void loadRepositoryTable(Repository repository, Table table, DataColumnStream data) throws IOException {
         try(FileWriter fw = new FileWriter(Constants.REPOSITORIES_PATH + repository.getLocation() + "/" + table.getLocation(), false);
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter out = new PrintWriter(bw)) {
-            out.println(data.getWriter().toString());
+            System.out.println("new \n" + data.toString());
+            out.println(DbFile.getOutputFormat(data));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -254,12 +255,9 @@ public class RepositoryManager extends JPanel {
             if(node.getNodeType() == Node.ELEMENT_NODE){
                 Element repo = (Element) node;
                 repositoryName = repo.getElementsByTagName("name").item(0).getTextContent();
-                repositoryVendor = repo.getElementsByTagName("vendor").item(0).getTextContent();
                 repositoryLocale = repo.getElementsByTagName("location").item(0).getTextContent();
 
-                vendor = Vendor.valueOf(repositoryVendor.toUpperCase());
-
-                repositories.add(new Repository(repositoryName, vendor, repositoryLocale));
+                repositories.add(new Repository(repositoryName, repositoryLocale));
             }
         }
         String loggerString = repositories.stream()

@@ -19,7 +19,7 @@ public class RepositoryManagerTest {
         doNothing().when(repositoryManager).registerRepository(mock(Repository.class));
         when(repositoryManager.getRepositoriesNames()).thenReturn(Set.of("Test_repo1"));
 
-        assertThat(repositoryManager.addRepository("Test_repo1", "CSV")).isFalse();
+        assertThat(repositoryManager.addRepository("Test_repo1")).isFalse();
     }
 
     @Test
