@@ -5,7 +5,6 @@ import etool.cdimc.db.DbFile;
 import etool.cdimc.models.Table;
 import etool.cdimc.scenes.SceneManager;
 import etool.cdimc.stream.DataColumnStream;
-import etool.cdimc.stream.DataTransformStream;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -69,7 +68,7 @@ public class RepositoryManager extends JPanel {
         repositoryLoader = null;
         repositoryLoader = new RepositoryLoader(repository);
         repositoryLoader.revalidate();
-        SceneManager.addRepository(repositoryLoader);
+        SceneManager.addRepositoryLoader(repositoryLoader);
     }
 
     private void addRepository() {
@@ -209,7 +208,6 @@ public class RepositoryManager extends JPanel {
         try(FileWriter fw = new FileWriter(Constants.REPOSITORIES_PATH + repository.getLocation() + "/" + table.getLocation(), false);
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter out = new PrintWriter(bw)) {
-            System.out.println("new \n" + data.toString());
             out.println(DbFile.getOutputFormat(data));
         } catch (IOException e) {
             e.printStackTrace();

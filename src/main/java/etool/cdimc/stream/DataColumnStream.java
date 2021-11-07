@@ -92,7 +92,6 @@ public class DataColumnStream {
                 logger.warning("Column " + col + " don't exist! Will not be filtered!");
             }
         }
-        System.out.println(dcs.getWriter());
         return dcs;
     }
 

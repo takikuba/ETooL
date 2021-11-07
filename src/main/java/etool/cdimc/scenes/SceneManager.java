@@ -2,6 +2,7 @@ package etool.cdimc.scenes;
 
 import etool.cdimc.Constants;
 import etool.cdimc.repository.RepositoryLoader;
+import etool.cdimc.tables.TableViewer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -79,9 +80,13 @@ public class SceneManager {
         }
     }
 
-    public static void addRepository(RepositoryLoader repositoryLoader) {
+    public static void addRepositoryLoader(RepositoryLoader repositoryLoader) {
         workspaceScene.setBackground(Constants.WORKSPACE_COLOR);
         workspaceScene.addRepositoryLoader(repositoryLoader);
+    }
+
+    public static void addTableViewer(TableViewer tableViewer) {
+        workspaceScene.addTableViewer(tableViewer);
     }
 
     @Override

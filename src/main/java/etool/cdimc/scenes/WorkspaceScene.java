@@ -2,12 +2,12 @@ package etool.cdimc.scenes;
 
 import etool.cdimc.Constants;
 import etool.cdimc.repository.RepositoryLoader;
+import etool.cdimc.tables.TableViewer;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class WorkspaceScene extends JPanel {
-    JPanel repositoryLoader;
-    JPanel repositoryViewer;
 
     public WorkspaceScene() {
         setBounds(200,0, 600, 600);
@@ -15,7 +15,7 @@ public class WorkspaceScene extends JPanel {
         setLayout(null);
     }
 
-    public void addRepositoryLoader(RepositoryLoader repositoryLoader){
+    public void addRepositoryLoader(RepositoryLoader repositoryLoader) {
         repositoryLoader.setBackground(Constants.mixColors(Constants.MENU_COLOR, Constants.WORKSPACE_COLOR));
         repaint();
         removeAll();
@@ -23,22 +23,16 @@ public class WorkspaceScene extends JPanel {
         add(repositoryLoader);
     }
 
+    public void addTableViewer(TableViewer tableViewer) {
+        tableViewer.setBackground(Color.green);
+        tableViewer.setBounds(200, 0, 400, 600);
+        add(tableViewer);
+        repaint();
+//        revalidate();
+    }
+
     public void setComponent(JComponent component) {
         this.add(component);
     }
 
-    public void connectToDb() {
-
-    }
-
-    public void extract() {
-
-    }
-
-    public void transform() {
-    }
-
-    public void load() {
-
-    }
 }

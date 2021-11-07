@@ -31,6 +31,7 @@ public class EtlActions {
     private Table table;
     private DataExtractStream dataExtractStream = new DataExtractStream();
     private DataColumnStream dcs;
+    private Vendor vendor;
 
     public EtlActions(Repository repository) {
         this.repository = repository;
@@ -45,7 +46,7 @@ public class EtlActions {
     public void extract() throws IOException {
         logger.log(Level.INFO, "extract");
 
-        Vendor vendor = Vendor.valueOf(FilenameUtils.getExtension(file.getName()).toUpperCase());
+        vendor = Vendor.valueOf(FilenameUtils.getExtension(file.getName()).toUpperCase());
         Extractor extractor;
 
         switch (vendor) {
@@ -93,10 +94,11 @@ public class EtlActions {
     }
 
     public void filter(Set<String> selectedColumns) {
-        System.out.println(dcs);
         table.setColumns(selectedColumns);
         transform();
-        dcs = dcs.getFilteredDataStream(selectedColumns);
+        if(!vendor.equals(Vendor.MYSQL)){
+            dcs = dcs.getFilteredDataStream(selectedColumns);
+        }
         load();
     }
     private void transform() {

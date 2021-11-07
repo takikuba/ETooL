@@ -22,14 +22,13 @@ import java.util.Set;
 
 public class DbTransformFrame extends JFrame {
 
-    private EtlActions etlActions;
-    private DbConnectionFrame connectionFrame;
+    private final EtlActions etlActions;
     private final Set<JCheckBox> loadingColumns = new HashSet<>();
     private final JButton loadButton = new JButton("Load");
 
     public DbTransformFrame(EtlActions etlActions){
         this.etlActions = etlActions;
-        this.connectionFrame = new DbConnectionFrame(this);
+        DbConnectionFrame connectionFrame = new DbConnectionFrame(this);
     }
 
     public void setFile(Parser parser) {
@@ -60,42 +59,54 @@ public class DbTransformFrame extends JFrame {
             JButton sB = new JButton(schema);
             sB.setBackground(Constants.WORKSPACE_COLOR);
             sB.addActionListener( e -> {
-                JPanel panel2 = new JPanel();
-                panel2.setBounds( 0, 0, 184, 161);
-                panel2.setBackground(Constants.MENU_COLOR);
-                panel2.setBorder(new CompoundBorder(new TitledBorder("Choose table: " + sB.getText()), new EmptyBorder(8, 0, 0, 0)));
-                for(String table: parser.getTables(schema)) {
-                    JButton st = new JButton(table);
-                    st.setBackground(Constants.WORKSPACE_COLOR);
-                    st.addActionListener( f -> {
-                        panel2.removeAll();
-                        panel2.setBorder(new CompoundBorder(new TitledBorder("Columns in table: " + table), new EmptyBorder(8, 0, 0, 0)));
-                        for(String column: parser.getColumns(table)){
-                            JCheckBox sc = new JCheckBox(column);
-                            sc.setBackground(Constants.WORKSPACE_COLOR);
-                            loadingColumns.add(sc);
-                            panel2.add(sc);
-                            repaint();
-                            revalidate();
-                            }
-                        loadButton.setBounds(30, 135, 120, 20);
-                        loadButton.setBackground(Constants.WORKSPACE_COLOR);
-                        loadButton.addActionListener( k -> {
-                            etlActions.filter(getSelectedColumns());
-                            this.dispose();
-                        });
-                        panel2.add(loadButton);
-                    });
-                    panel2.add(st);
-                }
                 getContentPane().remove(panel);
-                getContentPane().add(panel2);
+                getContentPane().add(getTablePanel(parser, sB, schema));
                 repaint();
                 revalidate();
             });
             panel.add(sB);
         }
         this.getContentPane().add(panel);
+    }
+
+    private JPanel getTablePanel(Parser parser, JButton sB, String schema) {
+        JPanel panel2 = new JPanel();
+        panel2.setBounds( 0, 0, 184, 161);
+        panel2.setBackground(Constants.MENU_COLOR);
+        panel2.setBorder(new CompoundBorder(new TitledBorder("Choose table: " + sB.getText()), new EmptyBorder(8, 0, 0, 0)));
+        for(String table: parser.getTables(schema)) {
+            addColumnSelector(table, panel2, parser);
+        }
+        return panel2;
+    }
+
+    private void addColumnSelector(String table, JPanel panel, Parser parser) {
+        JButton st = new JButton(table);
+        st.setBackground(Constants.WORKSPACE_COLOR);
+        st.addActionListener( f -> {
+            panel.removeAll();
+            panel.setBorder(new CompoundBorder(new TitledBorder("Columns in table: " + table), new EmptyBorder(8, 0, 0, 0)));
+            for(String column: parser.getColumns(table)){
+                JCheckBox sc = new JCheckBox(column);
+                sc.setBackground(Constants.WORKSPACE_COLOR);
+                loadingColumns.add(sc);
+                panel.add(sc);
+                repaint();
+                revalidate();
+            }
+            setUpLoadButton(panel);
+        });
+        panel.add(st);
+    }
+
+    private void setUpLoadButton(JPanel panel) {
+        loadButton.setBounds(30, 135, 120, 20);
+        loadButton.setBackground(Constants.WORKSPACE_COLOR);
+        loadButton.addActionListener( k -> {
+            etlActions.filter(getSelectedColumns());
+            this.dispose();
+        });
+        panel.add(loadButton);
     }
 
     private void startEtl() {
