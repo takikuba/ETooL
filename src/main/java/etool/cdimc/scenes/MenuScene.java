@@ -37,14 +37,10 @@ public class MenuScene extends JPanel {
         menuButtons = new JPanel();
         menuButtons.setBackground(Constants.MENU_COLOR);
         menuButtons.setBounds(
-                50, 100, 100, 400);
+                20, 100, 150, 550);
         menuButtons.setLayout(new BoxLayout(menuButtons, BoxLayout.Y_AXIS));
 
         chooseRepository(menuButtons);
-//        addButton("ConnectToDb", menuButtons, action -> workspaceScene.connectToDb());
-//        addButton("Extract", menuButtons, action -> workspaceScene.extract());
-//        addButton("Transform", menuButtons, action -> workspaceScene.transform());
-//        addButton("Load", menuButtons, action -> workspaceScene.load());
         addButton("Settings", menuButtons, action -> settings());
         addButton("Help", menuButtons, action -> help());
 

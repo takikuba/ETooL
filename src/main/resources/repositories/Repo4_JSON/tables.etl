@@ -1,5 +1,10 @@
-cars;column.mark;column.model;
-col;column.surname;column.name;column.pesel;
-country;column.name;column.count;
-laptops;column.mark;column.ramCount;column.model;
-persons;column.surname;column.name;
+cars;column.surname;column.name;column.3;column.4;column.5;column.6;column.7;column.8;column.9;column.10;
+col;column.surname;column.name;column.3;column.4;column.5;column.6;column.7;column.8;column.9;column.10;
+country;column.surname;column.name;column.3;column.4;column.5;column.6;column.7;column.8;column.9;column.10;
+laptops;column.surname;column.name;column.3;column.4;column.5;column.6;column.7;column.8;column.9;column.10;
+persons;column.surname;column.name;column.3;column.4;column.5;column.6;column.7;column.8;column.9;column.10;
+persons2;column.surname;column.name;column.3;column.4;column.5;column.6;column.7;column.8;column.9;column.10;
+persons3;column.surname;column.name;column.3;column.4;column.5;column.6;column.7;column.8;column.9;column.10;
+persons4;column.surname;column.name;column.3;column.4;column.5;column.6;column.7;column.8;column.9;column.10;
+persons5;column.surname;column.name;column.3;column.4;column.5;column.6;column.7;column.8;column.9;column.10;
+persons6;column.surname;column.name;column.3;column.4;column.5;column.6;column.7;column.8;column.9;column.10;

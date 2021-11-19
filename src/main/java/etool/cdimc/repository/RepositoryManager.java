@@ -24,6 +24,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.awt.*;
 import java.io.*;
 import java.util.*;
 import java.util.logging.Level;
@@ -32,10 +33,11 @@ import java.util.stream.Collectors;
 
 public class RepositoryManager extends JPanel {
     private final Logger logger = Constants.logger();
-    private Set<Repository> repositories = new HashSet<>();
+    private final Set<Repository> repositories = new HashSet<>();
     private Repository currentRepository = null;
-    private JButton buttonConnect;
+    private final JButton buttonConnect;
     private RepositoryLoader repositoryLoader;
+    private final JButton delete = new JButton("Delete");
 
     public RepositoryManager() {
         try{
@@ -48,6 +50,7 @@ public class RepositoryManager extends JPanel {
 
         setBackground(Constants.WORKSPACE_COLOR);
         setBorder(new CompoundBorder(new TitledBorder("Repositories"), new EmptyBorder(8, 0, 0, 0)));
+        setMinimumSize(new Dimension(100, 300));
 
         JButton buttonNew = new JButton("+ New +");
         buttonNew.addActionListener(e -> addRepository());
@@ -59,9 +62,16 @@ public class RepositoryManager extends JPanel {
             loadRepository(currentRepository);
         });
 
+        delete.setEnabled(false);
+        delete.addActionListener(e -> {
+            SceneManager.repaintFrame();
+            deleteRepository();
+        });
+
         add(getRepoList());
         add(buttonConnect);
         add(buttonNew);
+        add(delete);
     }
 
     private void loadRepository(Repository repository) {
@@ -115,8 +125,14 @@ public class RepositoryManager extends JPanel {
         return false;
     }
 
-    public void deleteRepository(String name) {
-
+    public void deleteRepository() {
+        File repoFile = new File(Constants.REPOSITORIES_PATH + currentRepository.getLocation());
+        boolean fDelete = repoFile.delete();
+        if (fDelete) {
+            logger.log(Level.INFO, "Repository deleted successfully");
+        } else {
+            logger.warning("Problem while deleting repository");
+        }
     }
 
     private JScrollPane getRepoList(){
@@ -129,6 +145,7 @@ public class RepositoryManager extends JPanel {
                 logger.warning("Repository: " + repoList.getSelectedValue() + " is invalid!");
             } else {
                 buttonConnect.setEnabled(true);
+                delete.setEnabled(true);
             }
         });
         repoList.setVisibleRowCount(5);

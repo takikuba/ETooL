@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <repositories>
     <repository>
-        <name>Repo4</name>
-        <location>Repo4_JSON</location>
-    </repository>
-    <repository>
-        <name>Repo3</name>
-        <location>Repo3_XML</location>
-    </repository>
-    <repository>
         <name>Repo2</name>
+        <vendor/>
         <location>Repo2_CSV</location>
     </repository>
     <repository>
+        <name>Repo4</name>
+        <vendor/>
+        <location>Repo4_JSON</location>
+    </repository>
+    <repository>
         <name>Repo1</name>
+        <vendor/>
         <location>Repo1_TXT</location>
+    </repository>
+    <repository>
+        <name>Repo3</name>
+        <vendor/>
+        <location>Repo3_XML</location>
     </repository>
 </repositories>

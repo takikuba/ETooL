@@ -23,6 +23,22 @@ public class Constants {
     public static Color WORKSPACE_COLOR = Color.GRAY;
     public static Font FONT = new Font("TimesRoman", Font.PLAIN, 10);
     public static Color FONT_COLOR = Color.BLACK;
+    private static long timer;
+    static long start;
+    static long finish;
+
+    public static void timerStart(){
+        start = System.currentTimeMillis();
+    }
+
+    public static void timerStop(){
+        finish  = System.currentTimeMillis();
+        System.out.println(getTime());
+    }
+
+    public static String getTime() {
+        return String.valueOf(finish - start);
+    }
 
     public static String REPOSITORIES_PATH = "src/main/resources/repositories/";
     public static String LOGO_PATH = "src/main/resources/icons/logo2.png";

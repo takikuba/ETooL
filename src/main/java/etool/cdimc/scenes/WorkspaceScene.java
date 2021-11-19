@@ -28,7 +28,6 @@ public class WorkspaceScene extends JPanel {
         tableViewer.setBounds(200, 0, 400, 600);
         add(tableViewer);
         repaint();
-//        revalidate();
     }
 
     public void setComponent(JComponent component) {
