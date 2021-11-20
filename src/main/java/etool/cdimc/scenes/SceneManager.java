@@ -1,6 +1,7 @@
 package etool.cdimc.scenes;
 
 import etool.cdimc.Constants;
+import etool.cdimc.components.TableManager;
 import etool.cdimc.repository.RepositoryLoader;
 import etool.cdimc.tables.TableViewer;
 
@@ -12,6 +13,7 @@ public class SceneManager {
     private static JFrame currentScene;
     private static MenuScene menuScene;
     private static WorkspaceScene workspaceScene;
+    private static TableManager tableManager;
 
     public static void setMenuAndWorkspace(MenuScene menuScene, WorkspaceScene workspaceScene) {
         SceneManager.menuScene = menuScene;
@@ -87,6 +89,14 @@ public class SceneManager {
 
     public static void addTableViewer(TableViewer tableViewer) {
         workspaceScene.addTableViewer(tableViewer);
+    }
+
+    public static void addTableManager(TableManager tableManager2) {
+        tableManager = tableManager2;
+    }
+
+    public static TableManager getTableManager() {
+        return tableManager;
     }
 
     @Override

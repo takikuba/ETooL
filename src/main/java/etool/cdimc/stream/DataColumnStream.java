@@ -3,6 +3,7 @@ package etool.cdimc.stream;
 import etool.cdimc.Constants;
 import etool.cdimc.db.DbFile;
 
+import java.io.DataOutputStream;
 import java.io.StringWriter;
 import java.util.*;
 import java.util.logging.Logger;

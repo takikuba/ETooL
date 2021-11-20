@@ -24,7 +24,7 @@ public class WorkspaceScene extends JPanel {
     }
 
     public void addTableViewer(TableViewer tableViewer) {
-        tableViewer.setBackground(Color.green);
+        tableViewer.setBackground(Constants.WORKSPACE_COLOR);
         tableViewer.setBounds(200, 0, 400, 600);
         add(tableViewer);
         repaint();

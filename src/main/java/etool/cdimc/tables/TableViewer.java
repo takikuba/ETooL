@@ -72,7 +72,6 @@ public class TableViewer extends JPanel {
 
                 table = new JTable(data2, columnNames);
 
-                System.out.println(sCurrentLine);
                 contentBuilder.append(sCurrentLine).append("\n");
             }
         }

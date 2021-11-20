@@ -1,9 +1,13 @@
 package etool.cdimc.scenes;
 
 import etool.cdimc.Constants;
+import etool.cdimc.components.TableManager;
 import etool.cdimc.repository.RepositoryManager;
 
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.logging.Level;
@@ -13,6 +17,7 @@ public class MenuScene extends JPanel {
     private final Image logo = new ImageIcon(Constants.LOGO_PATH).getImage();
     private final Logger logger = Constants.logger();
     private JPanel menuButtons;
+    private int yAlign = 420;
 
     public MenuScene() {
         setBounds(0, 0, 200, 600);
@@ -36,33 +41,44 @@ public class MenuScene extends JPanel {
     private JPanel addMenuButtons() {
         menuButtons = new JPanel();
         menuButtons.setBackground(Constants.MENU_COLOR);
-        menuButtons.setBounds(
-                20, 100, 150, 550);
-        menuButtons.setLayout(new BoxLayout(menuButtons, BoxLayout.Y_AXIS));
+        menuButtons.setBounds(0, 80, 200, 500);
+        menuButtons.setLayout(null);
 
         chooseRepository(menuButtons);
         addButton("Settings", menuButtons, action -> settings());
         addButton("Help", menuButtons, action -> help());
+
+        addTableManager(menuButtons);
 
         logger.info("Buttons added properly!");
 
         return menuButtons;
     }
 
+    private void addTableManager(JPanel parent) {
+        TableManager tableManager = new TableManager();
+        parent.add(tableManager);
+        SceneManager.addTableManager(tableManager);
+    }
+
     private void chooseRepository(Container container) {
         RepositoryManager repositoryManager = new RepositoryManager();
         container.add(repositoryManager);
-        container.add(Box.createVerticalGlue());
     }
 
     private void addButton(String text, Container container, ActionListener actionListener){
         JButton jButton = new JButton(text);
-        jButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        jButton.setBackground(Constants.WORKSPACE_COLOR);
         jButton.addActionListener(actionListener);
+        jButton.setBackground(Constants.WORKSPACE_COLOR);
+        jButton.setBounds(50, yAlign, 100, 20);
+        incrementButtonAlign();
 
         container.add(jButton);
         container.add(Box.createVerticalGlue());
+    }
+
+    private void  incrementButtonAlign() {
+        yAlign += 30;
     }
 
     private void settings() {

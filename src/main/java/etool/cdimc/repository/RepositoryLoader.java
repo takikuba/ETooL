@@ -16,8 +16,11 @@ import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.plaf.ScrollBarUI;
+import java.awt.*;
 import java.io.*;
 import java.util.*;
+import java.util.List;
 import java.util.logging.Logger;
 
 
@@ -57,7 +60,7 @@ public class RepositoryLoader extends JPanel {
 
         int colXPosition = 50;
         int tabXPosition = 10;
-        int i = 1;
+        int i = 0;
         JPanel pane = new JPanel();
         pane.setBackground(Constants.MENU_COLOR);
         pane.setBounds(15, 20, 170, 465);
@@ -114,9 +117,10 @@ public class RepositoryLoader extends JPanel {
         int colXPosition = 50;
         int tabXPosition = 10;
         int i = 1;
+
         JPanel pane = new JPanel();
         pane.setBackground(Constants.MENU_COLOR);
-        pane.setBounds(15, 20, 170, 465);
+        pane.setLayout(null);
         addLoadButtons();
         String element;
         while (sc.hasNext()){
@@ -132,10 +136,16 @@ public class RepositoryLoader extends JPanel {
                 }
             }
         }
+        pane.setPreferredSize(new Dimension(170, i * 25));
+
+        JScrollPane scrollPane = new JScrollPane(pane,
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBounds(5, 20, 190, 470);
+        scrollPane.setBackground(Constants.MENU_COLOR);
+
         sc.close();
-        add(pane);
-        revalidate();
-        repaint();
+        add(scrollPane);
     }
 
     private JButton getButton(String name, int i, int xPosition, boolean enabled) {
@@ -147,6 +157,7 @@ public class RepositoryLoader extends JPanel {
 //                Constants.timerStart();
                 tableViewer = new TableViewer(repository, name);
                 SceneManager.addTableViewer(tableViewer);
+                SceneManager.getTableManager().setEnabledTableManager(true);
 //                Constants.timerStop();
             });
         }

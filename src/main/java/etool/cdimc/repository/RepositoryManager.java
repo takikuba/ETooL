@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 public class RepositoryManager extends JPanel {
     private final Logger logger = Constants.logger();
     private final Set<Repository> repositories = new HashSet<>();
-    private Repository currentRepository = null;
+    private static Repository currentRepository = null;
     private final JButton buttonConnect;
     private RepositoryLoader repositoryLoader;
     private final JButton delete = new JButton("Delete");
@@ -50,12 +50,15 @@ public class RepositoryManager extends JPanel {
 
         setBackground(Constants.WORKSPACE_COLOR);
         setBorder(new CompoundBorder(new TitledBorder("Repositories"), new EmptyBorder(8, 0, 0, 0)));
-        setMinimumSize(new Dimension(100, 300));
+        setLayout(null);
+        setBounds(15, 0, 170, 235);
 
         JButton buttonNew = new JButton("+ New +");
+        buttonNew.setBounds(35, 140, 100, 20);
         buttonNew.addActionListener(e -> addRepository());
 
         buttonConnect = new JButton("Connect");
+        buttonConnect.setBounds(35, 170, 100, 20);
         buttonConnect.setEnabled(false);
         buttonConnect.addActionListener(e -> {
             SceneManager.repaintFrame();
@@ -63,6 +66,8 @@ public class RepositoryManager extends JPanel {
         });
 
         delete.setEnabled(false);
+        delete.setBackground(new Color(189, 101, 112));
+        delete.setBounds(35, 200, 100, 20);
         delete.addActionListener(e -> {
             SceneManager.repaintFrame();
             deleteRepository();
@@ -77,6 +82,7 @@ public class RepositoryManager extends JPanel {
     private void loadRepository(Repository repository) {
         repositoryLoader = null;
         repositoryLoader = new RepositoryLoader(repository);
+        repositoryLoader.setBounds(10, 10, 100, 300);
         repositoryLoader.revalidate();
         SceneManager.addRepositoryLoader(repositoryLoader);
     }
@@ -151,7 +157,7 @@ public class RepositoryManager extends JPanel {
         repoList.setVisibleRowCount(5);
 
         JScrollPane listScroller = new JScrollPane(repoList);
-        listScroller.setBounds(0,0,80, 80);
+        listScroller.setBounds(25, 25, 120, 100);
         listScroller.setBackground(Constants.MENU_COLOR);
         return listScroller;
     }
@@ -184,7 +190,6 @@ public class RepositoryManager extends JPanel {
 
         Element repository;
         Element name;
-        Element vendor;
         Element location;
 
         for(Repository repo: repositories){
@@ -193,9 +198,6 @@ public class RepositoryManager extends JPanel {
             name = doc.createElement("name");
             name.setTextContent(repo.getName());
             repository.appendChild(name);
-
-            vendor = doc.createElement("vendor");
-            repository.appendChild(vendor);
 
             location = doc.createElement("location");
             location.setTextContent(repo.getLocation());
@@ -219,6 +221,10 @@ public class RepositoryManager extends JPanel {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void deleteRepositoryTable() {
+
     }
 
     public static void loadRepositoryTable(Repository repository, Table table, DataColumnStream data) throws IOException {
@@ -262,9 +268,7 @@ public class RepositoryManager extends JPanel {
 
         NodeList nodeList = doc.getElementsByTagName("repository");
         String repositoryName;
-        String repositoryVendor;
         String repositoryLocale;
-        Vendor vendor;
 
         for(Node node: iterable(nodeList)) {
             if(node.getNodeType() == Node.ELEMENT_NODE){
