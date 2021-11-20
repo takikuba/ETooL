@@ -5,7 +5,9 @@ import etool.cdimc.models.Table;
 import etool.cdimc.repository.Repository;
 
 import javax.swing.*;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableModel;
+import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,67 +18,48 @@ public class TableViewer extends JPanel {
     private JTable table;
 
     public TableViewer(Repository repository, String tableName) {
+        setBounds(0, 0, 400, 600);
         getModel(repository, tableName);
         table.setBounds(0,20,400,600);
-        add(table);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        JScrollPane scroll = new JScrollPane(table,
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scroll.setBounds(0, 0, 385, 560);
+        add(scroll);
+        repaint();
         revalidate();
     }
 
-    private TableModel getModel(Repository repository, String tableName) {
+    private void getModel(Repository repository, String tableName) {
         File file = new File(Constants.REPOSITORIES_PATH + repository.getLocation() + "/" + tableName + ".cef");
         String out = usingBufferedReader(file.getPath());
-
-        return null;
     }
 
     public String usingBufferedReader(String filePath) {
         StringBuilder contentBuilder = new StringBuilder();
-        boolean header = true;
-        String[] headers = new String[0];
-        List<String> headersS = new ArrayList<>();
-        String[][] data = new String[0][];
-        List<String[]> dataS = new ArrayList<>();
+        String[] headers = new String[1];
+        List<String[]> dataList = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(filePath)))
         {
             String sCurrentLine;
             while ((sCurrentLine = br.readLine()) != null) {
-                if(header) {
-                    headers = sCurrentLine.split("/$");
-                    header = false;
+                if (sCurrentLine.contains("column.")) {
+                    sCurrentLine = sCurrentLine.replace("column.", "");
+                    headers = sCurrentLine.split("\\$");
                 } else {
-                    dataS.add(sCurrentLine.split("/$"));
+                    dataList.add(sCurrentLine.split("\\$"));
                 }
-
-//                table = new JTable(dataS, headersS);
-
-                String[] columnNames = {"First Name",
-                        "Last Name",
-                        "Sport",
-                        "# of Years",
-                        "Vegetarian"};
-
-
-
-                Object[][] data2 = {
-                        {"Kathy", "Smith",
-                                "Snowboarding", 5, Boolean.FALSE},
-                        {"John", "Doe",
-                                "Rowing", 3, Boolean.TRUE},
-                        {"Sue", "Black",
-                                "Knitting", 2, Boolean.FALSE},
-                        {"Jane", "White",
-                                "Speed reading", 20, Boolean.TRUE},
-                        {"Joe", "Brown",
-                                "Pool", 10, Boolean.FALSE}
-                };
-
-                table = new JTable(data2, columnNames);
-
                 contentBuilder.append(sCurrentLine).append("\n");
             }
+
+            Object[][] dataArray = new Object[dataList.size()][];
+            for(int i = 0; i < dataList.size(); i++) {
+                dataArray[i] = dataList.get(i);
+            }
+            table = new JTable(dataArray, headers);
         }
-        catch (IOException e)
-        {
+        catch (IOException e) {
             e.printStackTrace();
         }
         return contentBuilder.toString();

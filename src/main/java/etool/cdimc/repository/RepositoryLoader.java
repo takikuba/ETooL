@@ -92,10 +92,10 @@ public class RepositoryLoader extends JPanel {
                 String sCurrentLine;
                 while ((sCurrentLine = br.readLine()) != null) {
                     if(header) {
-                        headers = sCurrentLine.split("/$");
+                        headers = sCurrentLine.split("\\$");
                         header = false;
                     } else {
-                        dataS.add(sCurrentLine.split("/$"));
+                        dataS.add(sCurrentLine.split("\\$"));
                     }
 
                     contentBuilder.append(sCurrentLine).append("\n");
