@@ -9,10 +9,8 @@ import etool.cdimc.stream.DataColumnStream;
 import etool.cdimc.stream.DataExtractStream;
 import org.apache.commons.io.FilenameUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.swing.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -22,33 +20,6 @@ public class ExtractorMysql implements Extractor{
     @Override
     public DataExtractStream extract(File data) {
         logger.info("Run!");
-
-        try {
-            InputStream in = new FileInputStream(data);
-            ColumnModel columnsData = new ColumnModel(in);
-            List<String> fieldNames = null;
-            if (columnsData.hasNext())
-                fieldNames = new ArrayList<>(columnsData.next());
-            List<HashMap<String, String>> list = new ArrayList<>();
-            while (columnsData.hasNext()) {
-                List <String> x = columnsData.next();
-                HashMap<String, String> obj = new LinkedHashMap<>();
-                for (int i = 0; i < fieldNames.size(); i++) {
-                    obj.put(fieldNames.get(i).replace("column.", ""), x.get(i));
-                }
-                list.add(obj);
-            }
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.enable(SerializationFeature.INDENT_OUTPUT);
-            String output = mapper.writeValueAsString(list);
-
-            output = "{ \"" + FilenameUtils.getBaseName(data.getName()) + "\":" + output + "}";
-            in.close();
-            return new DataExtractStream(output);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         return null;
     }
 }

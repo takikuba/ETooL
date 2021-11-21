@@ -92,7 +92,7 @@ public class DbConnectionFrame extends JFrame {
 
     private void connect(DbConnectors db) throws SQLException, ClassNotFoundException {
         if(testConnection(db)) {
-            parent.setFile(db.getParser().setConnection(db.getConnector().connect(url.getText(), user.getText(), password.getText())));
+            parent.startTransform(db.getParser().setConnection(db.getConnector().connect(url.getText(), user.getText(), password.getText())));
             this.dispose();
         }
     }
@@ -107,5 +107,7 @@ public class DbConnectionFrame extends JFrame {
         }
     }
 
-
+    public DbConnectors getConnector() {
+        return connector;
+    }
 }

@@ -5,18 +5,18 @@ import java.util.Set;
 
 public class DataExtractStream {
     private JSONObject json;
-//    private DataColumnStream dataColumnStream;
+    private DataColumnStream dataColumnStream;
 
     public DataExtractStream(){}
 
     public DataExtractStream(String json) {
         this.json = new JSONObject(json);
-//        this.dataColumnStream = StreamTransformer.transformJsonToDataStream(json);
+        this.dataColumnStream = StreamTransformer.transformJsonToDataStream(json);
     }
 
-//    public DataExtractStream(DataColumnStream dataColumnStream) {
-//        this.dataColumnStream = dataColumnStream;
-//    }
+    public DataExtractStream(DataColumnStream dataColumnStream) {
+        this.dataColumnStream = dataColumnStream;
+    }
 
     public JSONObject getData(){
         return json;
@@ -26,13 +26,13 @@ public class DataExtractStream {
 //        this.dataColumnStream = dataColumnStream.getFilteredDataStream(columns);
 //    }
 
-//    public Set<String> getColumns() {
-//        return dataColumnStream.getColumns();
-//    }
-//
-//    public String toDataString() {
-//        return dataColumnStream.toString();
-//    }
+    public Set<String> getColumns() {
+        return dataColumnStream.getColumns();
+    }
+
+    public String toDataString() {
+        return dataColumnStream.toString();
+    }
 
     public String toString() {
         return json.toString();

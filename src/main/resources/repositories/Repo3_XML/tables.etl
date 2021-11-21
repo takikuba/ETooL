@@ -1,3 +1,5 @@
 students;column.name;column.album;
 students1;column.name;column.album;column.university;
-students2;column.make;column.model;
+cars;column.model;
+cars1;column.make;
+cars2;column.make;column.model;

@@ -25,14 +25,17 @@ public class DbTransformFrame extends JFrame {
     private final EtlActions etlActions;
     private final Set<JCheckBox> loadingColumns = new HashSet<>();
     private final JButton loadButton = new JButton("Load");
+    private Parser parser;
 
     public DbTransformFrame(EtlActions etlActions){
         this.etlActions = etlActions;
         DbConnectionFrame connectionFrame = new DbConnectionFrame(this);
     }
 
-    public void setFile(Parser parser) {
-        setTitle("FileTransform");
+    public void startTransform(Parser parser) {
+        this.parser = parser;
+
+        setTitle("DbTransform");
         setSize(200, 200);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
@@ -40,17 +43,11 @@ public class DbTransformFrame extends JFrame {
         setBackground(Constants.WORKSPACE_COLOR);
         setResizable(false);
         setVisible(true);
-        try {
-            extractFromDB(parser);
-            File file = DbFile.getDbFile(parser.getOutput(), etlActions.getRepository());
-            this.etlActions.setFile(file);
-        } catch (IOException | SQLException e) {
-            e.printStackTrace();
-        }
-        startEtl();
+
+        extractFromDB(parser);
     }
 
-    private void extractFromDB(Parser parser) {
+    private synchronized void extractFromDB(Parser parser) {
         JPanel panel = new JPanel();
         panel.setBounds( 0, 0, 184, 161);
         panel.setBackground(Constants.MENU_COLOR);
@@ -60,7 +57,7 @@ public class DbTransformFrame extends JFrame {
             sB.setBackground(Constants.WORKSPACE_COLOR);
             sB.addActionListener( e -> {
                 getContentPane().remove(panel);
-                getContentPane().add(getTablePanel(parser, sB, schema));
+                getContentPane().add(getTablePanel(parser, schema));
                 repaint();
                 revalidate();
             });
@@ -69,11 +66,11 @@ public class DbTransformFrame extends JFrame {
         this.getContentPane().add(panel);
     }
 
-    private JPanel getTablePanel(Parser parser, JButton sB, String schema) {
+    private JPanel getTablePanel(Parser parser, String schema) {
         JPanel panel2 = new JPanel();
         panel2.setBounds( 0, 0, 184, 161);
         panel2.setBackground(Constants.MENU_COLOR);
-        panel2.setBorder(new CompoundBorder(new TitledBorder("Choose table: " + sB.getText()), new EmptyBorder(8, 0, 0, 0)));
+        panel2.setBorder(new CompoundBorder(new TitledBorder("Choose table: " + schema), new EmptyBorder(8, 0, 0, 0)));
         for(String table: parser.getTables(schema)) {
             addColumnSelector(table, panel2, parser);
         }
@@ -126,6 +123,15 @@ public class DbTransformFrame extends JFrame {
         }
         if(retval.isEmpty()){
             new DbTransformFrame(etlActions);
+        }
+        parser.getColumnValues(retval);
+        try {
+            DbFile.DbTableFile tableFile = DbFile.getDbFile(parser.getOutput(), etlActions.getRepository());
+            this.etlActions.setTable(tableFile.getTable());
+            this.etlActions.setFile(tableFile.getFile());
+            startEtl();
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
         }
         return retval;
     }

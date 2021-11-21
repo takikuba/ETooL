@@ -212,11 +212,12 @@ public class RepositoryManager extends JPanel {
         addRepositoryHomeFolder(folderRepository);
     }
 
-    public static void registerRepositoryTable(Repository repository, Table table, DataColumnStream data) {
+    public static void registerRepositoryTable(Repository repository, Table table, DataColumnStream data, Vendor vendor) {
         try(FileWriter fw = new FileWriter(Constants.REPOSITORIES_PATH + repository.getLocation() + "/tables.etl", true);
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter out = new PrintWriter(bw)) {
             out.println(table.getTableWriter());
+            if(vendor.equals(Vendor.MYSQL)) return;
             loadRepositoryTable(repository, table, data);
         } catch (IOException e) {
             e.printStackTrace();

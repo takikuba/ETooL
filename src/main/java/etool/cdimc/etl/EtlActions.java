@@ -16,8 +16,11 @@ import org.apache.commons.io.FilenameUtils;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -46,7 +49,12 @@ public class EtlActions {
     public void extract() throws IOException {
         logger.log(Level.INFO, "extract");
 
-        vendor = Vendor.valueOf(FilenameUtils.getExtension(file.getName()).toUpperCase());
+        String vendorString = FilenameUtils.getExtension(file.getName()).toUpperCase();
+        if(vendorString.equals("CEF")) {
+            vendorString = "MYSQL";
+        }
+        vendor = Vendor.valueOf(vendorString);
+
         Extractor extractor;
 
         switch (vendor) {
@@ -71,14 +79,36 @@ public class EtlActions {
                 dataExtractStream = extractor.extract(file);
             }
         }
-
-        table = new Table(FilenameUtils.getBaseName(file.getName()), getColumns());
+        if(!vendor.equals(Vendor.MYSQL))
+            table = new Table(FilenameUtils.getBaseName(file.getName()), getColumns());
         DbFile.cleanRepository(repository);
     }
 
     public Set<String> getColumns() {
-        return getColumns(dataExtractStream);
+        if(dataExtractStream!=null) {
+            return getColumns(dataExtractStream);
+        }
+        return getSqlColumns();
     }
+
+    private Set<String> getSqlColumns() {
+        try (BufferedReader br = new BufferedReader(new FileReader(file.getPath()))) {
+            Set<String> retval = new HashSet<>();
+            String sCurrentLine;
+            while ((sCurrentLine = br.readLine()) != null) {
+                if (sCurrentLine.contains("column.")) {
+                    sCurrentLine = sCurrentLine.replace("column.", "");
+                    retval.addAll(Arrays.asList(sCurrentLine.split("\\$")));
+                }
+            }
+            return retval;
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public Set<String> getColumns(DataExtractStream data) {
         String jsonArray = data.getData().toString().substring(data.getData().toString().indexOf('[')+1, data.getData().toString().indexOf(']'));
         String[] rows = jsonArray.split("},\\{");
@@ -103,21 +133,29 @@ public class EtlActions {
     }
     private void transform() {
         logger.log(Level.INFO, "transform");
-        dcs = StreamTransformer.transformJsonToDataStream(dataExtractStream.toString());
-        dcs.setName(repository.getName());
+        if(!vendor.equals(Vendor.MYSQL)){
+            dcs = StreamTransformer.transformJsonToDataStream(dataExtractStream.toString());
+            dcs.setName(repository.getName());
+        }
     }
 
     public void load() {
         logger.log(Level.INFO, "load");
-        File file = new File(Constants.REPOSITORIES_PATH + repository.getLocation());
 
-        for(File f: Objects.requireNonNull(file.listFiles())){
-            if(f.getName().equals(table.getLocation())){
-                logger.warning("Table with this name already exist!");
-                table = table.changeName();
+        if(!vendor.equals(Vendor.MYSQL)) {
+            File file = new File(Constants.REPOSITORIES_PATH + repository.getLocation());
+
+            for(File f: Objects.requireNonNull(file.listFiles())){
+                if(f.getName().equals(table.getLocation())){
+                    logger.warning("Table with this name already exist!");
+                    table = table.changeName();
+                }
             }
         }
-        RepositoryManager.registerRepositoryTable(repository, table, dcs);
+
+
+
+        RepositoryManager.registerRepositoryTable(repository, table, dcs, vendor);
     }
 
     public Table getTable() {

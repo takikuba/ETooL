@@ -29,11 +29,11 @@ public class PsqlParser implements Parser {
         this.connection = connection;
         this.host = new RelationalModel.DataBase(connection.getCatalog(), null);
         logger.info("Get following database: " + connection.getCatalog());
-        getSchemas();
-        schema = host.getOrCreateSchema("ETL");
-        table = schema.getOrCreateTable("students");
-        getTables();
-        getColumns();
+//        getSchemas();
+//        schema = host.getOrCreateSchema("ETL");
+//        table = schema.getOrCreateTable("students");
+//        getTables();
+//        getColumns();
     }
 
     public PsqlParser setConnection(Connection connection) throws SQLException {
@@ -72,7 +72,7 @@ public class PsqlParser implements Parser {
         try {
             if (host.getChildrenNames().contains(schema)) {
                 this.schema = host.getOrCreateSchema(schema);
-            return getTables().stream().map(BaseModelItem::getName).collect(Collectors.toSet());
+                return getTables().stream().map(BaseModelItem::getName).collect(Collectors.toSet());
             } else {
                 logger.warning("ERROR: schema not found!");
             }

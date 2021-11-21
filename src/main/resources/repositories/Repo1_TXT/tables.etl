@@ -1,2 +1,3 @@
 students;column.name;column.university;
 laptops;column.mark;column.model;
+cars;column.model;

@@ -9,6 +9,8 @@ import java.awt.*;
 
 public class WorkspaceScene extends JPanel {
 
+    private TableViewer tableViewer;
+
     public WorkspaceScene() {
         setBounds(200,0, 600, 600);
         setBackground(Constants.WORKSPACE_COLOR);
@@ -24,6 +26,8 @@ public class WorkspaceScene extends JPanel {
     }
 
     public void addTableViewer(TableViewer tableViewer) {
+        if(this.tableViewer != null) remove(this.tableViewer);
+        this.tableViewer = tableViewer;
         tableViewer.setBackground(Constants.WORKSPACE_COLOR);
         tableViewer.setBounds(200, 0, 400, 600);
         add(tableViewer);
